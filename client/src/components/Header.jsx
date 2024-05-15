@@ -52,7 +52,7 @@ const Header = () => {
           <Moon />
         </Button>
         <Link to="/sign-in">
-          <Button>Sign In</Button>
+          <Button variant='outline' >Sign In</Button>
         </Link>
         {/* navigation menu mobile  */}
         <div className="flex md:hidden">
