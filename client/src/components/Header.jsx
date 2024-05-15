@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 const Header = () => {
   const path = useLocation().pathname;
   return (
-    <nav className=" border-b-2 py-4 flex justify-between items-center">
+    <nav className=" border-b-2 p-4 flex justify-between items-center">
       <Link
         to="/"
         className=" self-center whitespace-nowrap text-sm sm:text-xl  dark:text-white"
