@@ -84,7 +84,7 @@ const Header = () => {
                 <DropdownMenuItem
                   className={cn({ "font-semibold": path === "/projects" })}
                 >
-                  Projects
+                  Blogs
                 </DropdownMenuItem>
               </Link>
             </DropdownMenuContent>
@@ -120,7 +120,7 @@ const Header = () => {
                 className={cn({ underline: path === "/projects" })}
                 variant="link"
               >
-                Projects
+                Blogs
               </Button>
             </Link>
           </NavigationMenuItem>
