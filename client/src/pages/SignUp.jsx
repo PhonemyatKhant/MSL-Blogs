@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -6,7 +6,9 @@ import { Form } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/FormInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Frown, Loader2 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
   username: z
@@ -14,13 +16,19 @@ const formSchema = z.object({
     .min(2, {
       message: "Username must be at least 2 characters.",
     })
-    .max(50),
+    .max(50)
+    .trim(),
 
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string(),
+  email: z.string().email({ message: "Invalid email address" }).trim(),
+  password: z.string().trim(),
 });
 
 const SignUp = () => {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
   // signup input form
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -30,21 +38,29 @@ const SignUp = () => {
       password: "",
     },
   });
-  // onsubmit function
+  // onsubmit function POST values to create user
   async function onSubmit(values) {
-    console.log(values);
     try {
+      setLoading(true);
+      // clear prev error message
+      setErrorMessage(null);
+
       const res = await fetch("/api/auth/sign-up", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      // Log the raw response to see what the server returned
-      // const text = await res.text();
-      // console.log("Raw response text:", text);
+
       const data = await res.json();
+
+      setLoading(false);
+      setErrorMessage(data.message);
+      if (res.ok) {
+        navigate("/sign-in");
+      }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      setErrorMessage(error.message);
     }
   }
   return (
@@ -55,7 +71,7 @@ const SignUp = () => {
       >
         {/* left  */}
         <div className="flex-1 space-y-6">
-          <h1 className=" text-9xl font-medium ">
+          <h1 className=" text-9xl font-semibold ">
             MSL
             <br /> BLOGS
           </h1>
@@ -90,8 +106,15 @@ const SignUp = () => {
                 label="Password"
               />
 
-              <Button className="w-full " type="submit">
-                Sign Up
+              <Button className="w-full " type="submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Please wait
+                  </>
+                ) : (
+                  <>Sign Up</>
+                )}
               </Button>
             </form>
           </Form>
@@ -101,6 +124,14 @@ const SignUp = () => {
               Sign In
             </Link>{" "}
           </div>
+          {/* alert dialog */}
+          {errorMessage !== null && (
+            <Alert variant="destructive" className="mt-4">
+              <Frown className="h-4 w-4" />
+              <AlertTitle>Oops!</AlertTitle>
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>
+          )}
         </div>
       </div>
     </div>

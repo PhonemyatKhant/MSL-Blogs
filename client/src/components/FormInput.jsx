@@ -22,9 +22,9 @@ const FormInput = ({ form, placeholder, name, label, desc,type }) => {
           <FormControl>
             <Input type={type} placeholder={placeholder} {...field} />
           </FormControl>
-          <FormDescription classname={cn({ " hidden": desc === null })}>
+          {/* <FormDescription classname={cn({ " hidden": desc === null })}>
             {desc}{" "}
-          </FormDescription>
+          </FormDescription> */}
           <FormMessage />
         </FormItem>
       )}
