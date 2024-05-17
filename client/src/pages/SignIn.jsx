@@ -16,6 +16,7 @@ import {
   signInFailure,
 } from "@/redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import OAuth from "@/components/OAuth";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }).trim(),
@@ -52,7 +53,7 @@ const SignIn = () => {
       if (data?.success === false) {
         dispatch(signInFailure(data.message));
       }
-     
+
       if (res.ok) {
         dispatch(signInSuccess(data));
         navigate("/");
@@ -108,6 +109,7 @@ const SignIn = () => {
                   <>Sign In</>
                 )}
               </Button>
+              <OAuth />
             </form>
           </Form>
           <div className="flex gap-2 items-center mt-4">

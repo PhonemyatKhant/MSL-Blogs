@@ -9,6 +9,7 @@ import FormInput from "@/components/FormInput";
 import { Link, useNavigate } from "react-router-dom";
 import { Frown, Loader2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import OAuth from "@/components/OAuth";
 
 const formSchema = z.object({
   username: z
@@ -116,6 +117,7 @@ const SignUp = () => {
                   <>Sign Up</>
                 )}
               </Button>
+              <OAuth />
             </form>
           </Form>
           <div className="flex gap-2 items-center mt-4">
