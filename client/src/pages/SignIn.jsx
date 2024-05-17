@@ -10,16 +10,23 @@ import { Link, useNavigate } from "react-router-dom";
 import { Frown, Loader2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "@/redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }).trim(),
   password: z.string().trim(),
 });
 
 const SignIn = () => {
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // SignIn input form
   const form = useForm({
@@ -32,9 +39,8 @@ const SignIn = () => {
   // onsubmit function POST values to create user
   async function onSubmit(values) {
     try {
-      setLoading(true);
-      // clear prev error message
-      setErrorMessage(null);
+      // loading true error null
+      dispatch(signInStart());
 
       const res = await fetch("/api/auth/sign-in", {
         method: "POST",
@@ -43,15 +49,16 @@ const SignIn = () => {
       });
 
       const data = await res.json();
-
-      setLoading(false);
-      setErrorMessage(data.message);
+      if (data?.success === false) {
+        dispatch(signInFailure(data.message));
+      }
+     
       if (res.ok) {
+        dispatch(signInSuccess(data));
         navigate("/");
       }
     } catch (error) {
-      setLoading(false);
-      setErrorMessage(error.message);
+      dispatch(signInFailure(error.message));
     }
   }
   return (
