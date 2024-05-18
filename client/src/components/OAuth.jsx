@@ -41,7 +41,7 @@ const OAuth = () => {
   return (
     <Button
       onClick={handleGoogleClick}
-      className=" flex items-center gap-2  w-full"
+      className="dark:text-white flex items-center gap-2  w-full"
       type="button"
       variant="outline"
     >

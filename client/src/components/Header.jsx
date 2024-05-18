@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { Input } from "./ui/input";
-import { Menu, Moon, Search } from "lucide-react";
+import { Menu, Moon, Search, Sun } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -22,12 +22,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { cn } from "@/lib/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "@/redux/theme/themeSlice";
 
 const Header = () => {
   const path = useLocation().pathname;
+  const dispatch = useDispatch();
+  const { theme } = useSelector((state) => state.theme);
+  const { currentUser } = useSelector((state) => state.user);
   return (
-    <nav className=" border-b-2 p-4 flex justify-between items-center">
+    <nav className="dark:text-white border-b-2 p-4 flex justify-between items-center">
       <Link
         to="/"
         className=" self-center whitespace-nowrap text-sm sm:text-xl  dark:text-white"
@@ -44,16 +52,47 @@ const Header = () => {
       </form>
       {/* search icon mobile view */}
       <Button className="p-3 lg:hidden" variant="outline">
-        <Search />{" "}
+        <Search className=" dark:text-white" />{" "}
       </Button>
       {/* dark mode icon and Sign in button */}
       <div className="flex gap-4 md:order-2">
-        <Button variant="icon">
-          <Moon />
+        <Button
+          onClick={() => dispatch(toggleTheme())}
+          className="p-0"
+          variant="icon"
+        >
+          {theme !== "light" ? <Sun className="dark:text-white" /> : <Moon />}
         </Button>
-        <Link to="/sign-in">
-          <Button variant='outline' >Sign In</Button>
-        </Link>
+        {currentUser ? (
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                {" "}
+                <Avatar>
+                  <AvatarImage src={currentUser.profilePicture} />
+                  <AvatarFallback>
+                    {currentUser.username[0] + currentUser.username[1]}{" "}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel className="text-wrap truncate">
+                  {currentUser.email}{" "}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <Link to="/dashboard?tab=profile">
+                  {" "}
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                </Link>
+                <DropdownMenuItem>Sign Out</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ) : (
+          <Link to="/sign-in">
+            <Button variant="outline">Sign In</Button>
+          </Link>
+        )}
         {/* navigation menu mobile  */}
         <div className="flex md:hidden">
           <DropdownMenu>

@@ -65,14 +65,14 @@ const SignUp = () => {
     }
   }
   return (
-    <div className=" min-h-screen mt-20">
+    <div className="dark:text-white min-h-screen mt-20">
       <div
         className="flex flex-col md:flex-row  p-3 mx-auto max-w-6xl md:items-center 
        gap-9"
       >
         {/* left  */}
         <div className="flex-1 space-y-6">
-          <h1 className=" text-9xl font-semibold ">
+          <h1 className="max-md:text-8xl text-9xl font-semibold ">
             MSL
             <br /> BLOGS
           </h1>

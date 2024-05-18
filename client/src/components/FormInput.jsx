@@ -18,7 +18,7 @@ const FormInput = ({ form, placeholder, name, label, desc,type }) => {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label} </FormLabel>
+          <FormLabel className='dark:text-white'>{label} </FormLabel>
           <FormControl>
             <Input type={type} placeholder={placeholder} {...field} />
           </FormControl>
