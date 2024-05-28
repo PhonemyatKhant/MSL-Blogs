@@ -24,12 +24,14 @@ import {
   deleteFailure,
   deleteStart,
   deleteSuccess,
+  signOutSuccess,
   updateFailure,
   updateStart,
   updateSuccess,
 } from "@/redux/user/userSlice";
 import { Loader2 } from "lucide-react";
 import PopUpDialog from "./PopUpDialog";
+
 
 const formSchema = z.object({
   image: z.any(),
@@ -175,6 +177,23 @@ const DashboardProfile = () => {
       dispatch(deleteFailure(error.message));
     }
   };
+
+  //sign out function
+  const signOutHandler = async () => {
+    try {
+      const res = await fetch("/api/auth/sign-out", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        dispatch(signOutSuccess());
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className=" mt-5">
       <h1 className=" text-5xl font-semibold">My Profile</h1>
@@ -274,6 +293,7 @@ const DashboardProfile = () => {
                   type="button"
                   variant="link"
                   className=" text-red-400 p-1"
+                  onClick={() => signOutHandler(dispatch)}
                 >
                   Sign Out
                 </Button>
