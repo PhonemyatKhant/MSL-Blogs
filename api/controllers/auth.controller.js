@@ -50,7 +50,7 @@ export const signIn = async (req, res, next) => {
         const { password: pass, ...rest } = validUser._doc
 
         // response the user object and set cookie 
-        res.status(200).cookie('access token', token, { httpOnly: true }).json(rest)
+        res.status(200).cookie('access_token', token, { httpOnly: true }).json(rest)
 
     } catch (error) {
         next(error)
