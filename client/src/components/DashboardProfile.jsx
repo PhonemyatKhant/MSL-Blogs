@@ -20,11 +20,16 @@ import { app } from "@/firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import {
+  clearError,
+  deleteFailure,
+  deleteStart,
+  deleteSuccess,
   updateFailure,
   updateStart,
   updateSuccess,
 } from "@/redux/user/userSlice";
 import { Loader2 } from "lucide-react";
+import PopUpDialog from "./PopUpDialog";
 
 const formSchema = z.object({
   image: z.any(),
@@ -45,10 +50,14 @@ const DashboardProfile = () => {
   const [imageUploadComplete, setImageUploadComplete] = useState(true);
   const [isUpdateSuccessful, setIsUpdateSuccessful] = useState(null);
 
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, error } = useSelector((state) => state.user);
 
   const filePickerRef = useRef();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, []);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -56,12 +65,11 @@ const DashboardProfile = () => {
       // image: "",
       username: currentUser.username,
       email: currentUser.email,
-     
     },
   });
   const { register, handleSubmit, setValue, formState } = form;
 
-  //on submit
+  //on submit on update
   async function onSubmit(values) {
     values.image = imageURL || currentUser.profilePicture;
 
@@ -150,6 +158,23 @@ const DashboardProfile = () => {
       }
     );
   };
+
+  const deleteUserHandler = async () => {
+    dispatch(deleteStart());
+    try {
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        dispatch(deleteSuccess());
+      } else {
+        dispatch(deleteFailure(data.message));
+      }
+    } catch (error) {
+      dispatch(deleteFailure(error.message));
+    }
+  };
   return (
     <div className=" mt-5">
       <h1 className=" text-5xl font-semibold">My Profile</h1>
@@ -200,11 +225,13 @@ const DashboardProfile = () => {
               {imageFileUploadError && (
                 <Alert variant="destructive">
                   <AlertTitle>Error !</AlertTitle>
-                  <AlertDescription>
-                    {imageFileUploadError
-                      ? imageFileUploadError
-                      : "Update Unsuccessful!"}
-                  </AlertDescription>
+                  <AlertDescription>{imageFileUploadError}</AlertDescription>
+                </Alert>
+              )}
+              {error && (
+                <Alert variant="destructive">
+                  <AlertTitle>Error !</AlertTitle>
+                  <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
               {isUpdateSuccessful !== null && (
@@ -231,10 +258,23 @@ const DashboardProfile = () => {
                 imageInputHandler={imageInputHandler}
               />
               <div className=" flex justify-between items-center">
-                <Button variant="link" className=" text-red-400 p-1">
-                  Delete Account
-                </Button>
-                <Button variant="link" className=" text-red-400 p-1">
+                <PopUpDialog
+                  trigger={
+                    <Button
+                      type="button"
+                      variant="link"
+                      className=" text-red-400 p-1"
+                    >
+                      Delete Account
+                    </Button>
+                  }
+                  handlerFunction={deleteUserHandler}
+                />
+                <Button
+                  type="button"
+                  variant="link"
+                  className=" text-red-400 p-1"
+                >
                   Sign Out
                 </Button>
               </div>
