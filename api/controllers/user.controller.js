@@ -7,12 +7,16 @@ export const test = (req, res) => {
     res.json('Api is working')
 }
 export const updateUser = async (req, res, next) => {
+    let hashedPassword;
     if (req.user.id !== req.params.userId) {
         return next(errorHandler(401, 'You dont have access update this user!'))
     }
-    req.body.password && req.body.password.length < 6
-        ? next(errorHandler(400, 'Password must not be less than 6 characters!'))
-        : req.body.password && (req.body.password = bcryptjs.hashSync(req.body.password, 10));
+    if (req.body.password) {
+        if (req.body.password.length < 6) {
+            return next(errorHandler(400, 'Password must be at least 6 characters'));
+        }
+        hashedPassword = req.body.password !== "" && bcryptjs.hashSync(req.body.password, 10);
+    }
 
     req.body.username && (req.body.username.length < 6 || req.body.username > 20 || req.body.username.includes(" "))
         ? next(errorHandler(400, 'Username must be between 6~20 characters and must not contain spaces!'))
@@ -22,14 +26,14 @@ export const updateUser = async (req, res, next) => {
         const updatedUser = await User.findByIdAndUpdate(req.params.userId, {
             $set: {
                 username: req.body.username,
-                password: req.body.password,
+                password: hashedPassword,
                 email: req.body.email,
-                profilePicture: req.body.profilePicture
+                profilePicture: req.body.image
             }
         }, { new: true })
-
-        // const { password, ...rest } = updatedUser._doc
-        res.status(200).json(updatedUser)
+        console.log(updatedUser._doc.password);
+        const { password, ...rest } = updatedUser._doc
+        res.status(200).json(rest)
     } catch (error) {
         next(error)
     }

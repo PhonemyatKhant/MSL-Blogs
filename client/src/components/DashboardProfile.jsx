@@ -6,7 +6,7 @@ import { Form } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
 import FormInput from "./FormInput";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ImageFormInput from "./ImageFormInput";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -19,12 +19,21 @@ import { app } from "@/firebase";
 
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import {
+  updateFailure,
+  updateStart,
+  updateSuccess,
+} from "@/redux/user/userSlice";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   image: z.any(),
-  username: z.string().trim(),
+  username: z
+    .string()
+    .trim()
+    .min(6, "Username must be at least 6 characters long"),
   email: z.string().email({ message: "Invalid email address" }).trim(),
-  password: z.string().trim(),
+  password: z.string().trim().optional(),
 });
 
 const DashboardProfile = () => {
@@ -33,9 +42,13 @@ const DashboardProfile = () => {
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [imageFileUploading, setImageFileUploading] = useState(false);
+  const [imageUploadComplete, setImageUploadComplete] = useState(true);
+  const [isUpdateSuccessful, setIsUpdateSuccessful] = useState(null);
+
   const { currentUser } = useSelector((state) => state.user);
 
   const filePickerRef = useRef();
+  const dispatch = useDispatch();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -43,21 +56,49 @@ const DashboardProfile = () => {
       // image: "",
       username: currentUser.username,
       email: currentUser.email,
-      password: "",
+     
     },
   });
   const { register, handleSubmit, setValue, formState } = form;
 
   //on submit
   async function onSubmit(values) {
+    values.image = imageURL || currentUser.profilePicture;
+
+    dispatch(updateStart());
+
+    try {
+      //put request
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await res.json();
+      //show alert
+      if (res.ok) {
+        setIsUpdateSuccessful(true);
+      } else {
+        setIsUpdateSuccessful(false);
+      }
+      !res.ok
+        ? dispatch(updateFailure(data.message))
+        : dispatch(updateSuccess(data));
+    } catch (error) {
+      dispatch(updateFailure(error.message));
+    }
+
     console.log(values);
   }
   //set image url on change
   const imageInputHandler = (image) => {
     const imageURL = URL.createObjectURL(image);
+
     if (image) {
       setImageFile(image);
-      setImageURL(URL.createObjectURL(image));
+      setImageURL(imageURL);
     }
   };
   //upload image to firebase
@@ -68,6 +109,7 @@ const DashboardProfile = () => {
   }, [imageFile]);
   // upload image function
   const uploadImageHandler = async () => {
+    setImageUploadComplete(false);
     setImageFileUploading(true);
     setImageFileUploadError(null);
     const storage = getStorage(app);
@@ -87,10 +129,11 @@ const DashboardProfile = () => {
       },
       // when error uploading
       (error) => {
+        setImageUploadComplete(true);
         setImageFileUploadError(
           "Could not upload image (File must be less than 2MB)"
         );
-        // stop the progress 
+        // stop the progress
         setImageFileUploadProgress(null);
         setImageFile(null);
         setImageURL(null);
@@ -102,6 +145,7 @@ const DashboardProfile = () => {
           setImageURL(downloadURL);
           // setFormData({ ...formData, profilePicture: downloadURL });
           setImageFileUploading(false);
+          setImageUploadComplete(true);
         });
       }
     );
@@ -156,9 +200,26 @@ const DashboardProfile = () => {
               {imageFileUploadError && (
                 <Alert variant="destructive">
                   <AlertTitle>Error !</AlertTitle>
-                  <AlertDescription>{imageFileUploadError}</AlertDescription>
+                  <AlertDescription>
+                    {imageFileUploadError
+                      ? imageFileUploadError
+                      : "Update Unsuccessful!"}
+                  </AlertDescription>
                 </Alert>
               )}
+              {isUpdateSuccessful !== null && (
+                <Alert variant={!isUpdateSuccessful && "destructive"}>
+                  <AlertTitle>
+                    {isUpdateSuccessful ? "Success!" : "Oops!"}
+                  </AlertTitle>
+                  <AlertDescription>
+                    {isUpdateSuccessful
+                      ? "Update Successful!"
+                      : "Update Failed!"}
+                  </AlertDescription>
+                </Alert>
+              )}
+
               <ImageFormInput
                 className="hidden"
                 type="file"
@@ -202,8 +263,19 @@ const DashboardProfile = () => {
                 type="password"
               />
               {/* submit btn  */}
-              <Button className="w-full" type="submit">
-                UPDATE
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={imageUploadComplete === false}
+              >
+                {imageUploadComplete ? (
+                  "UPDATE"
+                ) : (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Please wait
+                  </>
+                )}
               </Button>
             </div>
           </div>

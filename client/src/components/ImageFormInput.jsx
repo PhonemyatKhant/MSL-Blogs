@@ -20,6 +20,7 @@ const ImageFormInput = ({
   reference,
   register,
 }) => {
+  
   return (
     <FormField
       control={form.control}

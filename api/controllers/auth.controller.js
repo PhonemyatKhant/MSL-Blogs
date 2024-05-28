@@ -38,7 +38,10 @@ export const signIn = async (req, res, next) => {
         if (!validUser) { return next(errorHandler(404, 'User Not Found!')) }
 
         // match password from found user 
+
         const validPassword = bcryptjs.compareSync(password, validUser.password)
+        console.log(password, validUser.password, 'passwords');
+        // const validPassword = password === validUser.password
         if (!validPassword) { return next(errorHandler(404, "Invalid Password")) }
 
         // create a token with user id from db
