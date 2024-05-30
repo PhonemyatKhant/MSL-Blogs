@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import userRoutes from './routes/user.route.js'
 import authRouter from './routes/auth.route.js'
+import postRouter from './routes/post.router.js'
 import cookieParser from 'cookie-parser'
 
 
@@ -23,6 +24,7 @@ app.listen(3000, () => {
 })
 app.use('/api/user', userRoutes)
 app.use('/api/auth', authRouter)
+app.use('/api/post', postRouter)
 
 // error handling middleware 
 app.use((err, req, res, next) => {

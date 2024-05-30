@@ -18,7 +18,7 @@ const formSchema = z.object({
     .min(1, "Category must be at least 6 characters long"),
   image: z.any(),
 
-  post: z.string(),
+  content: z.string(),
 });
 
 const CreatePostPage = () => {
@@ -65,9 +65,8 @@ const CreatePostPage = () => {
             // imageInputHandler={imageInputHandler}
           />
           <ReactQuill
-            {...register("post")}
-            
-            name="post"
+            {...register("content")}
+            name="content"
             theme="snow"
             placeholder="Write something..."
           />
