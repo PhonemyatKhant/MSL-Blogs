@@ -29,6 +29,23 @@ const DashboardSidebar = () => {
     { id: 0, name: "profile", label: "Profile", icon: <User /> },
     { id: 1, name: "sign-out", label: "Sign Out", icon: <LogOut /> },
   ];
+
+  //sign out function
+  const signOutHandler = async () => {
+    try {
+      const res = await fetch("/api/auth/sign-out", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        dispatch(signOutSuccess());
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="mt-4 ">
       <Sheet key={"left"}>

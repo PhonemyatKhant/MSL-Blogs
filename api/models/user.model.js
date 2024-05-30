@@ -20,6 +20,10 @@ const userSchema = new Schema({
     profilePicture: {
         type: String,
         default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoQknffmaNGPU5EEJuex257aR6ZIbmUlgcDQ&usqp=CAU "
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 

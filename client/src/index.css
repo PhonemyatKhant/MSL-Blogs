@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  height: 100vh;
+}
+
+.ql-editor {
+  font-size: 1.5rem;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -29,9 +29,9 @@ import {
   updateStart,
   updateSuccess,
 } from "@/redux/user/userSlice";
-import { Loader2 } from "lucide-react";
+import { Frown, Loader2, PartyPopper, Smile } from "lucide-react";
 import PopUpDialog from "./PopUpDialog";
-
+import { Link } from "react-router-dom";
 
 const formSchema = z.object({
   image: z.any(),
@@ -52,7 +52,7 @@ const DashboardProfile = () => {
   const [imageUploadComplete, setImageUploadComplete] = useState(true);
   const [isUpdateSuccessful, setIsUpdateSuccessful] = useState(null);
 
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
 
   const filePickerRef = useRef();
   const dispatch = useDispatch();
@@ -197,14 +197,46 @@ const DashboardProfile = () => {
   return (
     <div className=" mt-5">
       <h1 className=" text-5xl font-semibold">My Profile</h1>
+
+      {/* alert dialogs  */}
+      <div className=" mt-6 space-y-3">
+        {/* image input alert  */}
+        {imageFileUploadError && (
+          <Alert variant="destructive">
+            <Frown />
+            <AlertTitle>Error !</AlertTitle>
+            <AlertDescription>{imageFileUploadError}</AlertDescription>
+          </Alert>
+        )}
+        {/* error alert  */}
+        {error && (
+          <Alert variant="destructive">
+            <Frown />
+            <AlertTitle>Error !</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        {/* successful update alert  */}
+        {isUpdateSuccessful !== null && (
+          <Alert variant={!isUpdateSuccessful && "destructive"}>
+            {isUpdateSuccessful ? <Smile /> : <Frown />}
+            <AlertTitle>{isUpdateSuccessful ? "Success!" : "Oops!"}</AlertTitle>
+            <AlertDescription>
+              {isUpdateSuccessful ? "Update Successful!" : "Update Failed!"}
+            </AlertDescription>
+          </Alert>
+        )}
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className=" flex  justify-center gap-7  p-4 max-md:flex-col">
+          <div className=" flex justify-center gap-7  p-4 pt-10 max-md:flex-col md:items-end">
             {/* left */}
             <div className=" flex-1 space-y-4">
+              {/* rounded image container  */}
               <div
                 onClick={() => filePickerRef.current.click()}
-                className="relative cursor-pointer w-40  h-40 overflow-hidden rounded-full"
+                className="mb-4 mx-auto relative cursor-pointer  w-48  h-48 overflow-hidden rounded-full"
               >
                 {imageFileUploadProgress && (
                   <CircularProgressbar
@@ -240,32 +272,45 @@ const DashboardProfile = () => {
                   alt={currentUser.username}
                 />
               </div>
-              {/* image input  */}
-              {imageFileUploadError && (
-                <Alert variant="destructive">
-                  <AlertTitle>Error !</AlertTitle>
-                  <AlertDescription>{imageFileUploadError}</AlertDescription>
-                </Alert>
-              )}
-              {error && (
-                <Alert variant="destructive">
-                  <AlertTitle>Error !</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              {isUpdateSuccessful !== null && (
-                <Alert variant={!isUpdateSuccessful && "destructive"}>
-                  <AlertTitle>
-                    {isUpdateSuccessful ? "Success!" : "Oops!"}
-                  </AlertTitle>
-                  <AlertDescription>
-                    {isUpdateSuccessful
-                      ? "Update Successful!"
-                      : "Update Failed!"}
-                  </AlertDescription>
-                </Alert>
+              {/* create post button  */}
+
+              {currentUser.isAdmin && (
+                <Link to="/create-post">
+                  <Button className="w-full" variant="outline" type="button">
+                    Create Post
+                  </Button>
+                </Link>
               )}
 
+              {/* delete account sign out button  */}
+
+              <div className=" flex justify-between items-center">
+                <PopUpDialog
+                  trigger={
+                    // <Button
+
+                    //   type="button"
+                    //   variant="link"
+                    //   className=" text-red-400 p-1"
+                    // >
+                    //   Delete Account
+                    // </Button>
+                    <h1 className=" text-red-400 text-sm font-medium hover:underline">
+                      Delete Account
+                    </h1>
+                  }
+                  handlerFunction={deleteUserHandler}
+                />
+                <Button
+                  type="button"
+                  variant="link"
+                  className=" text-red-400 p-1"
+                  onClick={() => signOutHandler()}
+                >
+                  Sign Out
+                </Button>
+              </div>
+              {/* file input hidden  */}
               <ImageFormInput
                 className="hidden"
                 type="file"
@@ -276,28 +321,6 @@ const DashboardProfile = () => {
                 reference={filePickerRef}
                 imageInputHandler={imageInputHandler}
               />
-              <div className=" flex justify-between items-center">
-                <PopUpDialog
-                  trigger={
-                    <Button
-                      type="button"
-                      variant="link"
-                      className=" text-red-400 p-1"
-                    >
-                      Delete Account
-                    </Button>
-                  }
-                  handlerFunction={deleteUserHandler}
-                />
-                <Button
-                  type="button"
-                  variant="link"
-                  className=" text-red-400 p-1"
-                  onClick={() => signOutHandler(dispatch)}
-                >
-                  Sign Out
-                </Button>
-              </div>
             </div>
             {/* right  */}
             <div className=" flex-1 space-y-4">
@@ -326,9 +349,9 @@ const DashboardProfile = () => {
               <Button
                 className="w-full"
                 type="submit"
-                disabled={imageUploadComplete === false}
+                disabled={imageUploadComplete === false || loading}
               >
-                {imageUploadComplete ? (
+                {imageUploadComplete && !loading ? (
                   "UPDATE"
                 ) : (
                   <>

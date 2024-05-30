@@ -26,6 +26,8 @@ export const signUp = async (req, res, next) => {
         next(error)
     }
 }
+
+//sign in
 export const signIn = async (req, res, next) => {
     const { email, password } = req.body
 
@@ -46,7 +48,8 @@ export const signIn = async (req, res, next) => {
 
         // create a token with user id from db
         const token = jwt.sign({
-            id: validUser._id
+            id: validUser._id,
+            isAdmin: validUser.isAdmin
         }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' })
 
         //separate password _doc leaves out unnecessary mongoose properties
@@ -65,7 +68,7 @@ export const google = async (req, res, next) => {
     try {
         const user = await User.findOne({ email })
         if (user) {
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY)
+            const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET_KEY)
             const { password, ...rest } = user._doc
             res.status(200).cookie('access_token', token, { httpOnly: true }).json(rest)
         } else {
@@ -81,7 +84,7 @@ export const google = async (req, res, next) => {
 
             await newUser.save()
 
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY)
+            const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, process.env.JWT_SECRET_KEY)
             const { password, ...rest } = user._doc
             res.status(200).cookie('access_token', token, { httpOnly: true }).json(rest)
         }
