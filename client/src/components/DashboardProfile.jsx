@@ -287,14 +287,7 @@ const DashboardProfile = () => {
               <div className=" flex justify-between items-center">
                 <PopUpDialog
                   trigger={
-                    // <Button
-
-                    //   type="button"
-                    //   variant="link"
-                    //   className=" text-red-400 p-1"
-                    // >
-                    //   Delete Account
-                    // </Button>
+                    
                     <h1 className=" text-red-400 text-sm font-medium hover:underline">
                       Delete Account
                     </h1>

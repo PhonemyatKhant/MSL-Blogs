@@ -8,6 +8,7 @@ body {
 
 .ql-editor {
   font-size: 1.5rem;
+  height: 200px;
 }
 
 @layer base {

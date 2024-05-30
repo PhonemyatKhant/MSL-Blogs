@@ -20,7 +20,6 @@ const ImageFormInput = ({
   reference,
   register,
 }) => {
-  
   return (
     <FormField
       control={form.control}
@@ -29,17 +28,31 @@ const ImageFormInput = ({
         <FormItem className={className}>
           <FormLabel className="dark:text-white">{label} </FormLabel>
           <FormControl>
-            <Input
-              type="file"
-              id="image"
-              accept="image/*"
-              {...register("image", {
-                onChange: (e) => {
-                  imageInputHandler(e.target.files[0]);
-                },
-              })}
-              ref={reference}
-            />
+            {reference ? (
+              <Input
+                type="file"
+                id="image"
+                accept="image/*"
+                {...register("image", {
+                  onChange: (e) => {
+                    imageInputHandler(e.target.files[0]);
+                  },
+                })}
+                ref={reference}
+              />
+            ) : (
+              <Input
+                type="file"
+                id="image"
+                accept="image/*"
+                {...register("image", {
+                  onChange: (e) => {
+                    
+                    imageInputHandler(e.target.files[0]);
+                  },
+                })}
+              />
+            )}
           </FormControl>
 
           <FormMessage />
