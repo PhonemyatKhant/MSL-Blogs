@@ -16,9 +16,11 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "@/firebase";
-import { Frown, Loader2, Smile } from "lucide-react";
+import { ArrowLeft, Frown, Loader2, Smile } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 //form schema
+
 const formSchema = z.object({
   title: z.string().trim().min(6, "Title must be at least 6 characters long"),
   category: z
@@ -41,7 +43,11 @@ const CreatePostPage = () => {
 
   const [postUploadSuccess, setPostUploadSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
   //use form
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,16 +58,24 @@ const CreatePostPage = () => {
   const { register, handleSubmit, setValue, getValues } = form;
 
   // upload image function
+
   const uploadImageHandler = async () => {
     // setImageUploadComplete(false);
+
     setImageFileUploading(true);
     setImageFileUploadError(null);
     const storage = getStorage(app);
+
     // unique name
+
     const fileName = new Date().getTime() + imageFile.name;
+
     // ref storage
+
     const storageRef = ref(storage, fileName);
+
     // upload file to storage
+
     const uploadTask = uploadBytesResumable(storageRef, imageFile);
     uploadTask.on(
       "state_changed",
@@ -71,44 +85,57 @@ const CreatePostPage = () => {
 
         setImageFileUploadProgress(progress.toFixed(0));
       },
+
       // when error uploading
+
       (error) => {
         // setImageUploadComplete(true);
+
         setImageFileUploadError(
           "Could not upload image (File must be less than 2MB)"
         );
+
         // stop the progress
+
         setImageFileUploadProgress(null);
         setImageFile(null);
         setImageURL(null);
         setImageFileUploading(false);
       },
+
       // get image link after the uploading is done
+
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageURL(downloadURL);
           setValue("image", downloadURL);
+
           // setFormData({ ...formData, profilePicture: downloadURL });
+
           setImageFileUploading(false);
+
           // setImageUploadComplete(true);
         });
       }
     );
   };
+
   //on submit
+
   async function onSubmit(values) {
     if (content !== undefined) {
       values.content = content;
     }
 
     // remove html tags
+
     const pureString = values?.content?.replace(/<\/?[^>]+(>|$)/g, "");
     if (!pureString || pureString === " ") {
       // setContent(pureString);
+
       return;
     } else {
       try {
-        console.log("this ran");
         setLoading(true);
         const res = await fetch("api/post/create", {
           method: "POST",
@@ -122,7 +149,10 @@ const CreatePostPage = () => {
         });
         const data = await res.json();
         if (!res.ok) setPostUploadSuccess(false);
-        else setPostUploadSuccess(true);
+        else {
+          setPostUploadSuccess(true);
+          navigate("/");
+        }
 
         setLoading(false);
       } catch (error) {
@@ -135,8 +165,15 @@ const CreatePostPage = () => {
 
   return (
     <div className=" min-h-screen mx-auto mt-20 space-y-5  max-w-4xl w-full">
+      {/* go back arrow  */}
+
+      <Button onClick={() => navigate(-1)} className="p-0" variant="icon">
+        <ArrowLeft />
+      </Button>
       <h1 className=" text-5xl font-semibold">Create New Post</h1>
+
       {/* image upload error alert  */}
+
       {imageFileUploadError && (
         <Alert variant="destructive">
           <Frown />
@@ -144,7 +181,9 @@ const CreatePostPage = () => {
           <AlertDescription>{imageFileUploadError}</AlertDescription>
         </Alert>
       )}
+
       {/* post upload status alert  */}
+
       {postUploadSuccess !== null && (
         <Alert variant={!postUploadSuccess && "destructive"}>
           {postUploadSuccess ? <Smile /> : <Frown />}
@@ -160,7 +199,9 @@ const CreatePostPage = () => {
           </AlertDescription>
         </Alert>
       )}
+
       {/* empty content alert  */}
+
       {content === "" ||
         (content === undefined && (
           <Alert variant="destructive">
@@ -188,7 +229,9 @@ const CreatePostPage = () => {
             name="category"
             label="Category"
           />
+
           {/* image input and button  */}
+
           <div className=" flex gap-3 items-end flex-nowrap">
             <ImageFormInput
               className=" flex-1"
@@ -215,7 +258,9 @@ const CreatePostPage = () => {
               )}
             </Button>
           </div>
+
           {/* image showcase  */}
+
           {imageURL && (
             <div className=" w-full h-48">
               <img

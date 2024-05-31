@@ -111,13 +111,17 @@ const DashboardProfile = () => {
       setImageURL(imageURL);
     }
   };
+
   //upload image to firebase
+
   useEffect(() => {
     if (imageFile) {
       uploadImageHandler();
     }
   }, [imageFile]);
+
   // upload image function
+
   const uploadImageHandler = async () => {
     setImageUploadComplete(false);
     setImageFileUploading(true);
@@ -179,6 +183,7 @@ const DashboardProfile = () => {
   };
 
   //sign out function
+
   const signOutHandler = async () => {
     try {
       const res = await fetch("/api/auth/sign-out", {
@@ -195,7 +200,7 @@ const DashboardProfile = () => {
     }
   };
   return (
-    <div className=" mt-5">
+    <div >
       <h1 className=" text-5xl font-semibold">My Profile</h1>
 
       {/* alert dialogs  */}
@@ -287,7 +292,6 @@ const DashboardProfile = () => {
               <div className=" flex justify-between items-center">
                 <PopUpDialog
                   trigger={
-                    
                     <h1 className=" text-red-400 text-sm font-medium hover:underline">
                       Delete Account
                     </h1>
