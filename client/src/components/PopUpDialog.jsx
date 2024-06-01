@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const PopUpDialog = ({
+  setOpen,
+  open,
+  noTrigger,
   trigger,
   title,
   desc,
@@ -18,9 +21,10 @@ const PopUpDialog = ({
   proceed,
   handlerFunction,
 }) => {
+  // console.log(open, "open");
   return (
-    <AlertDialog>
-      <AlertDialogTrigger>{trigger}</AlertDialogTrigger>
+    <AlertDialog {...(open === undefined ? {} : { open })}>
+      {noTrigger ? <></> : <AlertDialogTrigger>{trigger}</AlertDialogTrigger>}
 
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -31,7 +35,11 @@ const PopUpDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel
+            {...(setOpen ? { onClick: () => setOpen(false) } : {})}
+          >
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction onClick={handlerFunction}>
             Continue
           </AlertDialogAction>

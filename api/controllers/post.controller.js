@@ -77,3 +77,19 @@ export const getAllPosts = async (req, res, next) => {
         next(error)
     }
 }
+
+// delete post 
+
+export const deletePost = async (req, res, next) => {
+
+    const { id, isAdmin } = req.user
+    const { userId, postId } = req.params
+    if (id !== userId || !isAdmin) next(errorHandler(403, 'Your are not allowed to do that!'))
+    try {
+        await Post.findByIdAndDelete(postId)
+
+        res.status(200).json('Post has been deleted!')
+    } catch (error) {
+        next(error)
+    }
+}
