@@ -4,28 +4,17 @@ import { useSelector } from "react-redux";
 import { DataTable } from "./ui/data-table";
 import { postColumns } from "@/lib/PostsColumn";
 
-const columns = [
-  {
-    label: "Date Updated",
-    key: "updatedAt",
-    className: "w-[100px] font-medium",
-  },
-  { label: "Image", key: "image" },
-  { label: "Title", key: "title" },
-  { label: "Category", key: "category" },
-  { label: "Delete", key: "delete" },
-  { label: "Edit", key: "edit" },
-];
-
 const DashboardPosts = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [allPosts, setAllPosts] = useState([]);
+
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `/api/post/all-posts?userId=${currentUser._id}`
+          `/api/post/all-posts?userId=${currentUser._id}&startIndex=${index}`
         );
         const data = await res.json();
         const { posts, totalPosts, totalPostsOneMonthAgo } = data;
@@ -40,11 +29,11 @@ const DashboardPosts = () => {
       }
     };
     currentUser.isAdmin && fetchPosts();
-  }, [currentUser._id]);
+  }, [currentUser._id, index]);
 
   return (
     <div>
-      <DataTable columns={postColumns} data={allPosts} />
+      <DataTable index={index} setIndex={setIndex} columns={postColumns} data={allPosts} />
     </div>
   );
 };

@@ -126,6 +126,7 @@ const CreatePostPage = () => {
     if (content !== undefined) {
       values.content = content;
     }
+    console.log(values.image, "image");
 
     // remove html tags
 
@@ -143,7 +144,7 @@ const CreatePostPage = () => {
           body: JSON.stringify({
             title: values.title,
             category: values.category,
-            image: values.image,
+            ...(values.image.length !== 0 && { image: values.image }),
             content: values.content,
           }),
         });
