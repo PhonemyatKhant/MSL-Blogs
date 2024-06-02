@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import CreatePostPage from "./pages/CreatePost";
+import UpdatePostPage from "./pages/UpdatePost";
 
 export default function App() {
   return (
@@ -26,6 +27,10 @@ export default function App() {
           </Route>
           <Route element={<AdminPrivateRoute />}>
             <Route path="/create-post" element={<CreatePostPage />} />
+            <Route
+              path="/update-post/:postId/:userId"
+              element={<UpdatePostPage />}
+            />
           </Route>
 
           <Route path="/sign-in" element={<SignIn />} />

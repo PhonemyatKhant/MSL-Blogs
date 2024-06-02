@@ -93,3 +93,30 @@ export const deletePost = async (req, res, next) => {
         next(error)
     }
 }
+
+export const updatePost = async (req, res, next) => {
+    
+    const { id, isAdmin } = req.user
+    const { userId, postId } = req.params
+
+    const { title, category, image, content } = req.body
+    if (id !== userId || !isAdmin) {
+        return next(errorHandler(403, 'Your are not allowed to do that!'))
+    }
+    try {
+        console.log(title, category, image, content, 'api');
+        console.log('this ran');
+        const updatedPost = await Post.findByIdAndUpdate(postId, {
+            $set: {
+                title,
+                category,
+                image,
+                content
+            }
+        }, { new: true })
+
+        res.status(200).json(updatedPost)
+    } catch (error) {
+        next(error)
+    }
+}

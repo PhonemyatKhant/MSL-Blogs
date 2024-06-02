@@ -105,7 +105,13 @@ export const postColumns = [
                 Copy post ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Edit Post</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  updatePostHandler(post._id, post.creatorId, navigate)
+                }
+              >
+                Edit Post
+              </DropdownMenuItem>
               {/* delete  */}
               <DropdownMenuItem onClick={() => setOpen(true)}>
                 Delete Post
@@ -139,4 +145,21 @@ const deletePostHandler = async (postId, creatorId, navigate) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const updatePostHandler = async (postId, creatorId, navigate) => {
+  // try {
+  //   const res = await fetch(`/api/post/update/${postId}/${creatorId}`, {
+  //     method: "PUT",
+  //   });
+  //   const data = await res.json();
+  //   if (!res.ok) {
+  //     console.log(data.message);
+  //   } else {
+  //     navigate(0);
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  // }
+  navigate(`/update-post/${postId}/${creatorId}`);
 };
