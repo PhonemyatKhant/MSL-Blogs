@@ -201,7 +201,7 @@ const DashboardProfile = () => {
   };
   return (
     <div >
-      <h1 className=" text-5xl font-semibold">My Profile</h1>
+      <h1 className=" text-primary text-5xl font-semibold">My Profile</h1>
 
       {/* alert dialogs  */}
       <div className=" mt-6 space-y-3">

@@ -63,7 +63,11 @@ const Header = () => {
           className="p-0"
           variant="icon"
         >
-          {theme !== "light" ? <Sun className="dark:text-primary" /> : <Moon  className="text-primary"/>}
+          {theme !== "light" ? (
+            <Sun className="dark:text-primary" />
+          ) : (
+            <Moon className="text-primary" />
+          )}
         </Button>
         {currentUser ? (
           <div>

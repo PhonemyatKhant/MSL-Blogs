@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const postColumns = [
   {
@@ -60,6 +60,16 @@ export const postColumns = [
           Title
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </div>
+      );
+    },
+    cell: ({ row }) => {
+      // console.log(row.original);
+      const {slug} = row.original
+      return (
+        <Link to={`/post/${slug}`}>
+          {" "}
+          <h1 className=" hover:underline cursor-pointer">{row.getValue("title")} </h1>
+        </Link>
       );
     },
   },
@@ -148,18 +158,6 @@ const deletePostHandler = async (postId, creatorId, navigate) => {
 };
 
 const updatePostHandler = async (postId, creatorId, navigate) => {
-  // try {
-  //   const res = await fetch(`/api/post/update/${postId}/${creatorId}`, {
-  //     method: "PUT",
-  //   });
-  //   const data = await res.json();
-  //   if (!res.ok) {
-  //     console.log(data.message);
-  //   } else {
-  //     navigate(0);
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  
   navigate(`/update-post/${postId}/${creatorId}`);
 };

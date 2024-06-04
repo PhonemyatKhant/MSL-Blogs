@@ -4,7 +4,6 @@
 
 body {
   height: 100vh;
-
 }
 
 .ql-editor {
@@ -66,4 +65,35 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+.content p {
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.content h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: sans-serif;
+  margin: 1.5rem 0;
+}
+
+
+.content h2 {
+  font-size: 1.4rem;
+  font-family: sans-serif;
+  margin: 1.5rem 0;
+}
+
+.content a {
+  color: blue;
+  text-decoration: none;
+}
+
+.content a:hover {
+  text-decoration: underline;
+}
+
+.dark .content a {
+  color: blue;
 }

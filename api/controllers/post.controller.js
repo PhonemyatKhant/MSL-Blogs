@@ -95,23 +95,26 @@ export const deletePost = async (req, res, next) => {
 }
 
 export const updatePost = async (req, res, next) => {
-    
+
     const { id, isAdmin } = req.user
     const { userId, postId } = req.params
 
     const { title, category, image, content } = req.body
+
+    const slug = title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, '-')
     if (id !== userId || !isAdmin) {
         return next(errorHandler(403, 'Your are not allowed to do that!'))
     }
     try {
-        console.log(title, category, image, content, 'api');
-        console.log('this ran');
+
+
         const updatedPost = await Post.findByIdAndUpdate(postId, {
             $set: {
                 title,
                 category,
                 image,
-                content
+                content,
+                slug
             }
         }, { new: true })
 
