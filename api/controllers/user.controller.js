@@ -51,10 +51,14 @@ export const deleteUser = async (req, res, next) => {
 }
 
 export const getAllUsers = async (req, res, next) => {
-    const { id, isAdmin } = req.user
-    const { userId } = req.params
 
-    if (id !== userId && !isAdmin) next(errorHandler(403, 'You dont have a permisson to see all the users!'))
+    const { isAdmin } = req.user
+
+
+
+    if (!isAdmin) {
+        return next(errorHandler(403, 'You dont have a permisson to see all the users!'))
+    }
 
     try {
 
@@ -69,7 +73,14 @@ export const getAllUsers = async (req, res, next) => {
             return rest
         })
 
-        res.status(200).json(usersWithoutPassword)
+        const allUserCount = await User.countDocuments()
+
+        const now = new Date()
+        const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate())
+
+        const newUsersOneMonthAgo = await User.countDocuments({ createdAt: { $gte: oneMonthAgo } })
+
+        res.status(200).json({ usersWithoutPassword, allUserCount, newUsersOneMonthAgo });
     } catch (error) {
         next(error)
     }

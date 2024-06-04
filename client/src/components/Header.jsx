@@ -68,6 +68,8 @@ const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 {" "}
+
+                {/* profile pic avatar */}
                 <Avatar>
                   <AvatarImage src={currentUser.profilePicture} />
                   <AvatarFallback>
