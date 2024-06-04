@@ -57,14 +57,14 @@ const DashboardSidebar = () => {
     }
   };
   return (
-    <div className="my-4 ">
-      <Sheet key={"left"}>
+    <div className="my-4  ">
+      <Sheet key={"left"}  >
         <SheetTrigger className=" text-lg flex items-center gap-2 text-muted-foreground font-semibold">
           {" "}
           <PanelRightClose />
           <span>Tabs</span>
         </SheetTrigger>
-        <SheetContent side="left">
+        <SheetContent  side="left">
           <SheetHeader className="mt-5">
             <SheetTitle className="flex items-center justify-between ">
               MSL BLOGS<Badge>{currentUser.isAdmin ? "ADMIN" : "USER"}</Badge>

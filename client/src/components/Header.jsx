@@ -40,7 +40,9 @@ const Header = () => {
         to="/"
         className=" self-center whitespace-nowrap text-sm sm:text-xl  dark:text-white"
       >
-        <span className=" px-2 py-1  bg-black text-white  rounded-lg">MSL</span>
+        <span className=" px-2 py-1  bg-primary  text-primary-foreground  rounded-lg">
+          MSL
+        </span>
         Blogs
       </Link>
       {/* search input */}
@@ -61,14 +63,13 @@ const Header = () => {
           className="p-0"
           variant="icon"
         >
-          {theme !== "light" ? <Sun className="dark:text-white" /> : <Moon />}
+          {theme !== "light" ? <Sun className="dark:text-primary" /> : <Moon  className="text-primary"/>}
         </Button>
         {currentUser ? (
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger>
                 {" "}
-
                 {/* profile pic avatar */}
                 <Avatar>
                   <AvatarImage src={currentUser.profilePicture} />
