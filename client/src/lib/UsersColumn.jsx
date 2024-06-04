@@ -28,7 +28,7 @@ export const userColumns = [
       );
     },
     cell: ({ row }) => {
-      const formattedDate = new Date(row.getValue("updatedAt"));
+      const formattedDate = new Date(row.getValue("createdAt"));
       const day = String(formattedDate.getUTCDate()).padStart(2, "0");
       const month = String(formattedDate.getUTCMonth() + 1).padStart(2, "0");
       const year = formattedDate.getUTCFullYear();
@@ -39,9 +39,9 @@ export const userColumns = [
     accessorKey: "profilePicture",
     header: () => <div className=" text-center">Image</div>,
     cell: ({ row }) => {
-      const currentUser = row.original();
+      const currentUser = row.original;
       return (
-        <div className=" mx-auto w-20 h-10">
+        <div className=" mx-auto  max-w-fit">
           {/* <img
             className=" w-full h-full"
             src={row.getValue("profilePicture")}
@@ -103,7 +103,16 @@ export const userColumns = [
     },
     cell: ({ row }) => {
       const isAdmin = row.getValue("isAdmin");
-      return <h1 className=" text-center"> {isAdmin ? <Check /> : <X />} </h1>;
+      return (
+        <h1 className=" mx-auto max-w-fit">
+          {" "}
+          {isAdmin ? (
+            <Check className=" text-green-600" />
+          ) : (
+            <X className=" text-red-600" />
+          )}{" "}
+        </h1>
+      );
     },
   },
 
@@ -113,7 +122,7 @@ export const userColumns = [
       const [open, setOpen] = useState(false);
       const navigate = useNavigate();
 
-      const post = row.original;
+      const user = row.original;
       return (
         <>
           <DropdownMenu>
@@ -126,21 +135,15 @@ export const userColumns = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(post._id)}
+                onClick={() => navigator.clipboard.writeText(user._id)}
               >
-                Copy post ID
+                Copy user ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() =>
-                  updatePostHandler(post._id, post.creatorId, navigate)
-                }
-              >
-                Edit Post
-              </DropdownMenuItem>
+
               {/* delete  */}
               <DropdownMenuItem onClick={() => setOpen(true)}>
-                Delete Post
+                Delete User
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -148,7 +151,7 @@ export const userColumns = [
             setOpen={setOpen}
             open={open}
             handlerFunction={() =>
-              deleteUserHandler(post._id, post.creatorId, navigate)
+              deleteUserHandler(user._id, user.creatorId, navigate)
             }
           />
         </>
@@ -157,9 +160,9 @@ export const userColumns = [
   },
 ];
 
-const deleteUserHandler = async (postId, creatorId, navigate) => {
+const deleteUserHandler = async (userId, creatorId, navigate) => {
   try {
-    const res = await fetch(`/api/post/delete/${postId}/${creatorId}`, {
+    const res = await fetch(`/api/user/delete/${userId}`, {
       method: "DELETE",
     });
     const data = await res.json();

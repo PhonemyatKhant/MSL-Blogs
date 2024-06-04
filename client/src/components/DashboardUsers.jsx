@@ -16,7 +16,7 @@ const DashboardUsers = () => {
       try {
         const res = await fetch(`/api/user/all-users?startIndex=${index}`);
         const data = await res.json();
-        console.log(data);
+      
 
         const { usersWithoutPassword, allUserCount, newUsersOneMonthAgo } =
           data;
