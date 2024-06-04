@@ -49,3 +49,28 @@ export const deleteUser = async (req, res, next) => {
         next(error)
     }
 }
+
+export const getAllUsers = async (req, res, next) => {
+    const { id, isAdmin } = req.user
+    const { userId } = req.params
+
+    if (id !== userId && !isAdmin) next(errorHandler(403, 'You dont have a permisson to see all the users!'))
+
+    try {
+
+        const startIndex = Number(req.query.startIndex || 0)
+        const limit = Number(req.query.limit || 9)
+        const sortDirection = Number(req.query.sortDirection === "asc" ? 1 : -1)
+
+        const allUsers = await User.find({}).sort({ createdAt: sortDirection }).skip(startIndex).limit(limit)
+
+        const usersWithoutPassword = allUsers.map(user => {
+            const { password, ...rest } = user._doc
+            return rest
+        })
+
+        res.status(200).json(usersWithoutPassword)
+    } catch (error) {
+        next(error)
+    }
+}
