@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { badgeVariants } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import AdCard from "@/components/AdCard";
 
 const PostPage = () => {
   const { postSlug } = useParams();
@@ -65,6 +66,8 @@ const PostPage = () => {
               className=" content max-w-3xl w-full p-3  mx-auto"
               dangerouslySetInnerHTML={{ __html: post.content }}
             ></div>
+            {/* <Separator /> */}
+            <AdCard adImage={post.image} />
           </div>
         </>
       )}
