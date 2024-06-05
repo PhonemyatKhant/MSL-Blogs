@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart } from "lucide-react";
+import { Edit, Heart, Trash2, X } from "lucide-react";
 import moment from "moment";
 import { Separator } from "./ui/separator";
+import { Link } from "react-router-dom";
+import { Button } from "./ui/button";
+import { useSelector } from "react-redux";
+import { FaHeart } from "react-icons/fa";
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, onLike }) => {
   const [user, setUser] = useState(null);
-  console.log(user);
+  const { currentUser } = useSelector((state) => state.user);
+
   //get user based on the commenter id from comment
 
   useEffect(() => {
@@ -56,11 +61,30 @@ const Comment = ({ comment }) => {
 
               {/* like, edit and delete  */}
 
-              <div>
-                <h1>
-                  <Heart className="w-4 h-4" />
-                  <span></span>
-                </h1>
+              <div className=" pt-5 flex items-center gap-2">
+                {/* like */}
+                <div
+                  onClick={() => onLike(comment._id)}
+                  className=" cursor-pointer  flex gap-1 items-center"
+                >
+                  {" "}
+                  {currentUser && comment.likes.includes(currentUser._id) ? (
+                    <FaHeart className=" text-primary" />
+                  ) : (
+                    <Heart className="  text-primary w-4 h-4" />
+                  )}
+                  <span className=" text-xs">{comment.likesCount} </span>
+                </div>
+                {/* edit */}
+                <div className=" cursor-pointer  flex gap-1 items-center">
+                  <Edit className=" text-yellow-400 w-4 h-4" />
+                  <span className=" text-xs">edit </span>
+                </div>
+                {/* delete */}
+                <div className=" cursor-pointer flex  items-center">
+                  <Trash2 className=" text-red-400 w-4 h-4" />
+                  <span className=" text-xs">delete </span>
+                </div>
               </div>
             </div>
           </div>

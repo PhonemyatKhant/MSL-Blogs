@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -41,6 +41,8 @@ const CommentSection = ({ postId }) => {
   const [count, setCount] = useState(0);
   const [comments, setComments] = useState([]);
 
+  const navigate = useNavigate();
+
   const { currentUser } = useSelector((state) => state.user);
 
   const form = useForm({
@@ -68,7 +70,7 @@ const CommentSection = ({ postId }) => {
       const data = await res.json();
 
       if (res.ok) {
-        setComments((prevComments) => [data, ...prevComments]); 
+        setComments((prevComments) => [data, ...prevComments]);
         setValue("comment", "");
         setCount(0);
       }
@@ -92,6 +94,39 @@ const CommentSection = ({ postId }) => {
     };
     fetchComments();
   }, [postId]);
+
+  //on like handler function
+
+  const onLikeHandler = async (commentId) => {
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      const res = await fetch(`/api/comment/like-comment/${commentId}`, {
+        method: "PUT",
+      });
+      if (res.ok) {
+        const data = await res.json();
+
+        // replace that individual comment with updated like arrray and count
+
+        setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: data.likes,
+                  likesCount: data.likesCount,
+                }
+              : comment
+          )
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className=" space-y-5 my-8">
       <Card>
@@ -178,15 +213,14 @@ const CommentSection = ({ postId }) => {
           </h1>
 
           {/* comment section  */}
-          {comments.map((comment) => {
-            return (
-              <Comment
-                comments={comments}
-                comment={comment}
-                key={comment._id}
-              />
-            );
-          })}
+          
+          {comments.map((comment) => (
+            <Comment
+              onLike={onLikeHandler}
+              comment={comment}
+              key={comment._id}
+            />
+          ))}
         </div>
       )}
     </div>
