@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,6 +21,11 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "./ui/card";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Frown } from "lucide-react";
+import { Badge } from "./ui/badge";
+import Comment from "./Comment";
+
 const FormSchema = z.object({
   comment: z
     .string()
@@ -34,6 +39,8 @@ const FormSchema = z.object({
 
 const CommentSection = ({ postId }) => {
   const [count, setCount] = useState(0);
+  const [comments, setComments] = useState([]);
+
   const { currentUser } = useSelector((state) => state.user);
 
   const form = useForm({
@@ -41,6 +48,8 @@ const CommentSection = ({ postId }) => {
   });
 
   const { register, setValue } = form;
+
+  //submit
 
   const onSubmit = async (values) => {
     // console.log(values);
@@ -56,9 +65,10 @@ const CommentSection = ({ postId }) => {
           postId,
         }),
       });
-      // const data = await res.json();
+      const data = await res.json();
 
       if (res.ok) {
+        setComments((prevComments) => [data, ...prevComments]); 
         setValue("comment", "");
         setCount(0);
       }
@@ -66,8 +76,24 @@ const CommentSection = ({ postId }) => {
       console.log(error.message);
     }
   };
+
+  //get comments
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const res = await fetch(`/api/comment/get-comments/${postId}`);
+        const data = await res.json();
+
+        if (res.ok) setComments(data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchComments();
+  }, [postId]);
   return (
-    <div className=" my-8">
+    <div className=" space-y-5 my-8">
       <Card>
         <CardContent className=" pt-5 space-y-6">
           {currentUser ? (
@@ -136,6 +162,33 @@ const CommentSection = ({ postId }) => {
           </Form>
         </CardContent>
       </Card>
+      {comments.length === 0 ? (
+        // no comments alert
+        <Alert variant="destructive">
+          <Frown className="h-4 w-4" />
+          <AlertTitle>Oops!</AlertTitle>
+          <AlertDescription>No comments yet!</AlertDescription>
+        </Alert>
+      ) : (
+        <div>
+          {/* comments count  */}
+
+          <h1 className=" flex items-center gap-2">
+            Comments <Badge className="">{comments.length} </Badge>
+          </h1>
+
+          {/* comment section  */}
+          {comments.map((comment) => {
+            return (
+              <Comment
+                comments={comments}
+                comment={comment}
+                key={comment._id}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

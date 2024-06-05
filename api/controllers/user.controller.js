@@ -85,3 +85,20 @@ export const getAllUsers = async (req, res, next) => {
         next(error)
     }
 }
+
+// get single user 
+
+export const getUser = async (req, res, next) => {
+    const { userId } = req.params
+
+    try {
+        const user = await User.findById(userId)
+        if (!user) next(errorHandler(404, 'No User Found!'))
+
+        const { password, ...rest } = user._doc
+
+        res.status(200).json(rest)
+    } catch (error) {
+        next(error)
+    }
+}

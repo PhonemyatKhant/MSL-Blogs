@@ -49,7 +49,7 @@ const PostPage = () => {
             </Link>
           </div>
           {/*  image */}
-          <div className=" mt-10  max-w-5xl w-full  mx-auto overflow-hidden">
+          <div className=" mt-10  max-w-3xl w-full  mx-auto overflow-hidden">
             <img
               src={post.image}
               alt={post.title}
