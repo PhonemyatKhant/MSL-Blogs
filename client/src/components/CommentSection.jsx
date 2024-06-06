@@ -165,6 +165,24 @@ const CommentSection = ({ postId }) => {
       console.log(error);
     }
   };
+
+  //on delete handler
+  const onDeleteHandler = async (commentId, userId) => {
+    try {
+      const res = await fetch(
+        `/api/comment/delete-comment/${commentId}/${userId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setComments(comments.filter((comment) => comment._id !== data._id));
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className=" space-y-5 my-8">
       <Card>
@@ -254,6 +272,7 @@ const CommentSection = ({ postId }) => {
 
           {comments.map((comment) => (
             <Comment
+              onDelete={onDeleteHandler}
               onEdit={onEditHandler}
               onLike={onLikeHandler}
               comment={comment}

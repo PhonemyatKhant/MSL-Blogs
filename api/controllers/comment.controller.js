@@ -77,3 +77,18 @@ export const editComments = async (req, res, next) => {
         next(error)
     }
 }
+
+export const deleteComments = async (req, res, next) => {
+    const { commentId, userId } = req.params
+    const { isAdmin, id } = req.user
+
+    if (!isAdmin && userId !== id) return next(errorHandler(401, 'You dont have access to delete this comment!!'))
+
+    try {
+        const deletedComment = await Comment.findByIdAndDelete(commentId)
+        res.status(200).json(deletedComment)
+    } catch (error) {
+        next(error)
+    }
+
+}

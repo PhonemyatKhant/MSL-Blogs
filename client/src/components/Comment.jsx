@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import PopUpDialog from "./PopUpDialog";
 
 const FormSchema = z.object({
   comment: z
@@ -34,12 +35,14 @@ const FormSchema = z.object({
     }),
 });
 
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }) => {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState({ status: false, commentId: "" });
 
   const { currentUser } = useSelector((state) => state.user);
   const [count, setCount] = useState(0);
+
+  const [openPopUp, setOpenPopUp] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -185,8 +188,10 @@ const Comment = ({ comment, onLike, onEdit }) => {
                     <span className=" text-xs">{comment.likesCount} </span>
                   </div>
                   {/* edit */}
-                  {currentUser.isAdmin ||
-                    (currentUser._id === comment.userId && (
+
+                  {currentUser &&
+                    (currentUser.isAdmin ||
+                      currentUser._id === comment.userId) && (
                       <div
                         onClick={() => editClickHandler(comment._id)}
                         className="  cursor-pointer  flex gap-1 items-center"
@@ -194,12 +199,29 @@ const Comment = ({ comment, onLike, onEdit }) => {
                         <Edit className=" text-yellow-400 w-4 h-4" />
                         <span className=" text-xs">edit </span>
                       </div>
-                    ))}
+                    )}
                   {/* delete */}
-                  <div className=" cursor-pointer flex  items-center">
-                    <Trash2 className=" text-red-400 w-4 h-4" />
-                    <span className=" text-xs">delete </span>
-                  </div>
+                  {currentUser &&
+                    (currentUser.isAdmin ||
+                      currentUser._id === comment.userId) && (
+                      <>
+                        <div
+                          onClick={() => setOpenPopUp(true)}
+                          className="  cursor-pointer  flex gap-1 items-center"
+                        >
+                          <Trash2 className=" text-red-400 w-4 h-4" />
+                          <span className=" text-xs">delete </span>
+                        </div>
+                        <PopUpDialog
+                          setOpen={setOpenPopUp}
+                          open={openPopUp}
+                          noTrigger={true}
+                          handlerFunction={() =>
+                            onDelete(comment._id, comment.userId)
+                          }
+                        />
+                      </>
+                    )}
                 </div>
               </div>
             )}
