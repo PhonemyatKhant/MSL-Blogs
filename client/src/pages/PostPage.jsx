@@ -6,6 +6,7 @@ import { badgeVariants } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import AdCard from "@/components/AdCard";
 import CommentSection from "@/components/CommentSection";
+import RecentArticles from "@/components/RecentArticles";
 
 const PostPage = () => {
   const { postSlug } = useParams();
@@ -53,7 +54,7 @@ const PostPage = () => {
             <img
               src={post.image}
               alt={post.title}
-              className=" w-full max-h-[500px] object-cover"
+              className=" w-full max-h-[400px] object-cover"
             />
             {/* date time container  */}
             <div className=" my-4 flex justify-between items-center italic">
@@ -75,7 +76,9 @@ const PostPage = () => {
             {/* comment section of the post  */}
 
             <CommentSection postId={post._id} />
+            {/* recent article section */}
           </div>
+          <RecentArticles />
         </>
       )}
     </div>
