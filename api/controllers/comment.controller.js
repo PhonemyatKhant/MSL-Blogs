@@ -22,6 +22,34 @@ export const createComments = async (req, res, next) => {
         next(error)
     }
 }
+export const getAllComments = async (req, res, next) => {
+    const { isAdmin } = req.user
+
+    if (!isAdmin) {
+        return next(errorHandler(403, 'You dont have a permisson to see all the comments!'))
+    }
+    try {
+
+        const startIndex = Number(req.query.startIndex || 0)
+        const limit = Number(req.query.limit || 9)
+        const sortDirection = Number(req.query.sortDirection === "asc" ? 1 : -1)
+
+        const allComments = await Comment.find({}).sort({ createdAt: sortDirection }).skip(startIndex).limit(limit)
+
+
+        const allCommentCount = await Comment.countDocuments()
+
+        const now = new Date()
+        const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate())
+
+        const newCommentsOneMonthAgo = await Comment.countDocuments({ createdAt: { $gte: oneMonthAgo } })
+
+        res.status(200).json({ allComments, allCommentCount, newCommentsOneMonthAgo });
+    } catch (error) {
+        next(error)
+    }
+}
+//get individual comments based on post id
 export const getComments = async (req, res, next) => {
     const { postId } = req.params
     try {

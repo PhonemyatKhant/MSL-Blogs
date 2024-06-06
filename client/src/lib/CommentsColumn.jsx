@@ -12,7 +12,7 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export const postColumns = [
+export const commentColumns = [
   {
     accessorKey: "updatedAt",
     header: ({ column }) => {
@@ -34,70 +34,67 @@ export const postColumns = [
       return <h1>{`${day}/${month}/${year}`} </h1>;
     },
   },
+
   {
-    accessorKey: "image",
-    header: () => <div className=" text-center">Image</div>,
-    cell: ({ row }) => {
-      return (
-        <div className=" mx-auto w-20 h-10">
-          <img
-            className=" w-full h-full"
-            src={row.getValue("image")}
-            alt={row.getValue("title")}
-          />{" "}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "title",
+    accessorKey: "comment",
     header: ({ column }) => {
       return (
         <div
           className="flex items-center cursor-pointer max-w-fit"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Title
+          Comment
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </div>
       );
     },
     cell: ({ row }) => {
       // console.log(row.original);
-      const {slug} = row.original
+      const { slug } = row.original;
       return (
         <Link to={`/post/${slug}`}>
           {" "}
-          <h1 className=" hover:underline cursor-pointer">{row.getValue("title")} </h1>
+          <h1 className=" hover:underline cursor-pointer">
+            {row.getValue("comment")}{" "}
+          </h1>
         </Link>
       );
     },
   },
   {
-    accessorKey: "category",
+    accessorKey: "likesCount",
     header: ({ column }) => {
       return (
         <h1
           className=" mx-auto  cursor-pointer max-w-fit"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Category
+          Likes Count
           <ArrowUpDown className="inline ml-2 h-4 w-4" />
         </h1>
       );
     },
     cell: ({ row }) => {
-      return <h1 className=" text-center">{row.getValue("category")} </h1>;
+      return <h1 className=" text-center">{row.getValue("likesCount")} </h1>;
     },
+  },
+  //   {
+  //     accessorKey: "postId",
+  //     header: "Post ID",
+  //   },
+  {
+    accessorKey: "userId",
+    header: "User ID",
   },
 
   {
     id: "actions",
     cell: ({ row }) => {
       const [open, setOpen] = useState(false);
+
       const navigate = useNavigate();
 
-      const post = row.original;
+      const comment = row.original;
       return (
         <>
           <DropdownMenu>
@@ -111,21 +108,22 @@ export const postColumns = [
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(post._id)}
+                onClick={() => navigator.clipboard.writeText(comment._id)}
+              >
+                Copy comment ID
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() =>
+                  navigator.clipboard.writeText(row.getValue("postId"))
+                }
               >
                 Copy post ID
               </DropdownMenuItem>
-             
-              <DropdownMenuItem
-                onClick={() =>
-                  updatePostHandler(post._id, post.creatorId, navigate)
-                }
-              >
-                Edit Post
-              </DropdownMenuItem>
+
               {/* delete  */}
               <DropdownMenuItem onClick={() => setOpen(true)}>
-                Delete Post
+                Delete Comment
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -133,7 +131,12 @@ export const postColumns = [
             setOpen={setOpen}
             open={open}
             handlerFunction={() =>
-              deletePostHandler(post._id, post.creatorId, navigate)
+              deleteCommentHandler(
+                comment._id,
+                comment.userId,
+                navigate,
+              
+              )
             }
           />
         </>
@@ -142,11 +145,14 @@ export const postColumns = [
   },
 ];
 
-const deletePostHandler = async (postId, creatorId, navigate) => {
+const deleteCommentHandler = async (commentId, userId, navigate) => {
   try {
-    const res = await fetch(`/api/post/delete/${postId}/${creatorId}`, {
-      method: "DELETE",
-    });
+    const res = await fetch(
+      `/api/comment/delete-comment/${commentId}/${userId}`,
+      {
+        method: "DELETE",
+      }
+    );
     const data = await res.json();
     if (!res.ok) {
       console.log(data.message);
@@ -159,6 +165,5 @@ const deletePostHandler = async (postId, creatorId, navigate) => {
 };
 
 const updatePostHandler = async (postId, creatorId, navigate) => {
-  
   navigate(`/update-post/${postId}/${creatorId}`);
 };

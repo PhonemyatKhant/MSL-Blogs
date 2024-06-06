@@ -35,6 +35,7 @@ const DashboardUsers = () => {
   return (
     <div>
       <DataTable
+      title='All Users'
         index={index}
         setIndex={setIndex}
         columns={userColumns}

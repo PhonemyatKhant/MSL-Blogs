@@ -6,12 +6,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Library, LogOut, PanelRightClose, User, Users } from "lucide-react";
+import { Library, LogOut, MessageSquareMore, PanelRightClose, User, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Separator } from "./ui/separator";
 import { Badge } from "./ui/badge";
 import { useSelector } from "react-redux";
+
 
 const DashboardSidebar = () => {
   const location = useLocation();
@@ -37,7 +38,8 @@ const DashboardSidebar = () => {
     { id: 0, name: "profile", label: "Profile", icon: <User /> },
     { id: 1, name: "posts", label: "Posts", icon: <Library /> },
     { id: 2, name: "users", label: "Users", icon: <Users /> },
-    { id: 3, name: "sign-out", label: "Sign Out", icon: <LogOut /> },
+    { id: 3, name: "comments", label: "Comments", icon: <MessageSquareMore /> },
+    { id: 4, name: "sign-out", label: "Sign Out", icon: <LogOut /> },
   ];
 
   //sign out function

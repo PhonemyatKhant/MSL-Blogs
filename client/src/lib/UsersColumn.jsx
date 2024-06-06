@@ -134,12 +134,12 @@ export const userColumns = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(user._id)}
               >
                 Copy user ID
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
 
               {/* delete  */}
               <DropdownMenuItem onClick={() => setOpen(true)}>

@@ -10,8 +10,6 @@ const DashboardPosts = () => {
 
   const [index, setIndex] = useState(0);
 
-   
-
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -36,6 +34,7 @@ const DashboardPosts = () => {
   return (
     <div>
       <DataTable
+        title="All Posts"
         index={index}
         setIndex={setIndex}
         columns={postColumns}
@@ -44,7 +43,5 @@ const DashboardPosts = () => {
     </div>
   );
 };
-
-
 
 export default DashboardPosts;
