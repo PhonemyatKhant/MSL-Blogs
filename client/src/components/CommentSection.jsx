@@ -127,6 +127,44 @@ const CommentSection = ({ postId }) => {
       console.log(error);
     }
   };
+
+  //on edit handler
+
+  const onEditHandler = async (commentId, values, userId) => {
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      const res = await fetch(
+        `/api/comment/edit-comment/${commentId}/${userId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+
+        // replace that individual comment with updated like arrray and count
+
+        setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  comment: data.comment,
+                }
+              : comment
+          )
+        );
+        return res;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className=" space-y-5 my-8">
       <Card>
@@ -213,9 +251,10 @@ const CommentSection = ({ postId }) => {
           </h1>
 
           {/* comment section  */}
-          
+
           {comments.map((comment) => (
             <Comment
+              onEdit={onEditHandler}
               onLike={onLikeHandler}
               comment={comment}
               key={comment._id}

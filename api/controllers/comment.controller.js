@@ -39,7 +39,7 @@ export const likeComments = async (req, res, next) => {
     try {
         const comment = await Comment.findById(commentId)
 
-        console.log(comment,'this ran');
+        console.log(comment, 'this ran');
         if (!comment) return next(errorHandler(404, 'Comment not found!'))
 
         const commenterIndex = comment.likes.findIndex((userId) => userId === req.user.id)
@@ -53,6 +53,26 @@ export const likeComments = async (req, res, next) => {
         await comment.save()
 
         res.status(201).json(comment)
+    } catch (error) {
+        next(error)
+    }
+}
+export const editComments = async (req, res, next) => {
+    const { commentId, userId } = req.params
+    const { isAdmin, id } = req.user
+
+
+    try {
+        if (!isAdmin && id !== userId) return next(errorHandler(401, 'You dont have access to edit this comment !!'))
+        const updatedComment = await Comment.findByIdAndUpdate(commentId, {
+            $set: {
+                comment: req.body.comment
+            }
+        }, { new: true })
+
+
+        res.status(201).json(updatedComment)
+
     } catch (error) {
         next(error)
     }
