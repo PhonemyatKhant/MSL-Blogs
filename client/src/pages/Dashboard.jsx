@@ -6,6 +6,7 @@ import DashboardComment from "@/components/DashboardComment";
 import React, { useEffect, useState } from "react";
 
 import { useLocation } from "react-router-dom";
+import DashboardHome from "@/components/DashboardHome";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -26,6 +27,9 @@ const Dashboard = () => {
         <DashboardSidebar />
       </div>
       {/* right display  */}
+
+      {/* dashboard  */}
+      <div>{tab === "dashboard" && <DashboardHome />}</div>
 
       {/* profile  */}
       <div>{tab === "profile" && <DashboardProfile />}</div>

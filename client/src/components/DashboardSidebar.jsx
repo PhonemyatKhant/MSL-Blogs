@@ -6,13 +6,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Library, LogOut, MessageSquareMore, PanelRightClose, User, Users } from "lucide-react";
+import {
+  LayoutDashboard,
+  Library,
+  LogOut,
+  MessageSquareMore,
+  PanelRightClose,
+  User,
+  Users,
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Separator } from "./ui/separator";
 import { Badge } from "./ui/badge";
 import { useSelector } from "react-redux";
-
 
 const DashboardSidebar = () => {
   const location = useLocation();
@@ -35,11 +42,12 @@ const DashboardSidebar = () => {
     { id: 1, name: "sign-out", label: "Sign Out", icon: <LogOut /> },
   ];
   const adminTabs = [
-    { id: 0, name: "profile", label: "Profile", icon: <User /> },
-    { id: 1, name: "posts", label: "Posts", icon: <Library /> },
-    { id: 2, name: "users", label: "Users", icon: <Users /> },
-    { id: 3, name: "comments", label: "Comments", icon: <MessageSquareMore /> },
-    { id: 4, name: "sign-out", label: "Sign Out", icon: <LogOut /> },
+    { id: 0, name: "dashboard", label: "Dashboard", icon: <LayoutDashboard /> },
+    { id: 1, name: "profile", label: "Profile", icon: <User /> },
+    { id: 2, name: "posts", label: "Posts", icon: <Library /> },
+    { id: 3, name: "users", label: "Users", icon: <Users /> },
+    { id: 4, name: "comments", label: "Comments", icon: <MessageSquareMore /> },
+    { id: 5, name: "sign-out", label: "Sign Out", icon: <LogOut /> },
   ];
 
   //sign out function
@@ -60,13 +68,13 @@ const DashboardSidebar = () => {
   };
   return (
     <div className="my-4  ">
-      <Sheet key={"left"}  >
+      <Sheet key={"left"}>
         <SheetTrigger className=" text-lg flex items-center gap-2 text-muted-foreground font-semibold">
           {" "}
           <PanelRightClose />
           <span>Tabs</span>
         </SheetTrigger>
-        <SheetContent  side="left">
+        <SheetContent side="left">
           <SheetHeader className="mt-5">
             <SheetTitle className="flex items-center justify-between ">
               MSL BLOGS<Badge>{currentUser.isAdmin ? "ADMIN" : "USER"}</Badge>
