@@ -12,21 +12,21 @@ import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
   return (
-    <Link to={`/post/${post.slug}`}>
-      <Card className="max-w-sm overflow-hidden">
-        <CardContent className="px-0 ">
+    <Link className="" to={`/post/${post.slug}`}>
+      <Card className="w-full overflow-hidden flex flex-col h-full">
+        <CardContent className="p-0 flex-grow">
           <img
-            className=" w-full h-48 object-cover"
+            className="w-full h-48 object-cover"
             src={post.image}
             alt={post.title}
           />
         </CardContent>
-        <CardFooter className=" space-y-3 flex flex-col">
-          <h1 className=" truncate w-full">{post.title} </h1>
-          <div className="w-full flex justify-between ">
-            <Badge>{post.category} </Badge>
-            <h1 className=" italic text-sm">
-              {moment(post.updatedAt).fromNow()}{" "}
+        <CardFooter className="p-4 space-y-3 flex flex-col flex-grow">
+          <h1 className="truncate w-full">{post.title}</h1>
+          <div className="w-full flex justify-between items-center">
+            <Badge>{post.category}</Badge>
+            <h1 className="italic text-sm">
+              {moment(post.updatedAt).fromNow()}
             </h1>
           </div>
         </CardFooter>

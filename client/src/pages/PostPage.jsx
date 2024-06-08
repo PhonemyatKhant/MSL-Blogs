@@ -78,7 +78,7 @@ const PostPage = () => {
             <CommentSection postId={post._id} />
             {/* recent article section */}
           </div>
-          <RecentArticles />
+          <RecentArticles limit={3} />
         </>
       )}
     </div>

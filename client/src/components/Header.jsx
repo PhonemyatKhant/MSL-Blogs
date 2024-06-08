@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Menu, Moon, Search, Sun } from "lucide-react";
 import {
@@ -31,31 +31,66 @@ import { toggleTheme } from "@/redux/theme/themeSlice";
 
 const Header = () => {
   const path = useLocation().pathname;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+
   const dispatch = useDispatch();
   const { theme } = useSelector((state) => state.theme);
   const { currentUser } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const keyword = urlParams.get("searchTerm");
+
+    if (keyword) {
+      setSearchTerm(keyword);
+    }
+  }, [location.search]);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("searchTerm", searchTerm);
+
+    const searchQuery = urlParams.toString();
+    console.log(searchQuery);
+
+    navigate(`/search?${searchQuery}`);
+  };
   return (
-    <nav className="dark:text-white border-b-2 p-4 flex justify-between items-center">
-      <Link
-        to="/"
-        className=" self-center whitespace-nowrap text-sm sm:text-xl  dark:text-white"
-      >
-        <span className=" px-2 py-1  bg-primary  text-primary-foreground  rounded-lg">
-          MSL
-        </span>
-        Blogs
-      </Link>
-      {/* search input */}
-      <form className="relative hidden lg:flex items-center justify-center ">
-        <Input type="text" placeholder="Search..." />
-        <span className="absolute text-muted-foreground mr-3  right-0">
-          <Search />{" "}
-        </span>
-      </form>
-      {/* search icon mobile view */}
+    <nav className="dark:text-white bg-transparent border-b-2 p-2 flex justify-between items-center">
+      <div className=" flex items-center justify-between gap-3">
+        <Link
+          to="/"
+          className=" self-center whitespace-nowrap    text-sm sm:text-xl  dark:text-white"
+        >
+          <span className="  px-2 py-1  bg-primary mr-1  text-primary-foreground  rounded-lg">
+            msl.
+          </span>
+          <span className="underline">Blogs</span>
+        </Link>
+        {/* search input */}
+        <form
+          onSubmit={ onSubmit}
+          className="relative max-sm:max-w-[150px] flex items-center justify-center "
+        >
+          <Input
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="rounded-3xl w-full"
+            type="text"
+            value={searchTerm}
+            placeholder="Search..."
+          />
+          <span className="absolute text-muted-foreground mr-3  right-0">
+            <Search />{" "}
+          </span>
+        </form>
+      </div>
+      {/* search icon mobile view
       <Button className="p-3 lg:hidden" variant="outline">
         <Search className=" dark:text-white" />{" "}
-      </Button>
+      </Button> */}
       {/* dark mode icon and Sign in button */}
       <div className="flex gap-4 md:order-2">
         <Button

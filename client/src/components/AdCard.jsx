@@ -10,9 +10,9 @@ import { Button } from "./ui/button";
 
 const AdCard = ({ adImage }) => {
   return (
-    <Card className=" mt-24 overflow-hidden">
-      <div className=" flex items-center  flex-col sm:flex-row">
-        <div className=" flex-1">
+    <Card className=" max-w-screen-lg mx-auto mt-24 overflow-hidden">
+      <div className=" flex items-center w-full  justify-evenly px-10   flex-col sm:flex-row">
+        <div className=" w-full flex-1">
           <CardHeader>
             <CardTitle>Want to see more of my recent projects?</CardTitle>
             <CardDescription>
@@ -23,8 +23,8 @@ const AdCard = ({ adImage }) => {
             <Button> CLICK ME </Button>
           </CardContent>
         </div>
-        <CardContent className=" pt-6 flex-1">
-          <img className=" w-full h-full" src={adImage} alt="github profile" />
+        <CardContent className=" max-w-screem-md w-full pt-6 flex-1">
+          <img className=" w-full h-full" src={adImage} alt="svg" />
         </CardContent>
       </div>
     </Card>

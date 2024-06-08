@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import PostCard from "./PostCard";
 
-const RecentArticles = () => {
+const RecentArticles = ({limit}) => {
   const [recentPosts, setRecentPosts] = useState([]);
-  console.log(recentPosts);
+  
 
   useEffect(() => {
     const fetchRecentArticles = async () => {
       try {
-        const res = await fetch("/api/post/all-posts?limit=3");
+        const res = await fetch(`/api/post/all-posts?limit=${limit}`);
         const data = await res.json();
         if (res.ok) {
           setRecentPosts(data.posts);
@@ -22,9 +22,9 @@ const RecentArticles = () => {
   return (
     <div className=" space-y-4">
       <h1 className=" font-semibold text-3xl text-center"> Recent Articles</h1>
-      <div className=" grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className=" items-center grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {recentPosts.length !== 0 &&
-          recentPosts.map((recentPost) => <PostCard post={recentPost} />)}
+          recentPosts.map((recentPost,index) => <PostCard key={index} post={recentPost} />)}
       </div>
     </div>
   );
