@@ -45,6 +45,8 @@ const Header = () => {
 
     if (keyword) {
       setSearchTerm(keyword);
+    } else {
+      setSearchTerm("");
     }
   }, [location.search]);
 
@@ -54,7 +56,6 @@ const Header = () => {
     urlParams.set("searchTerm", searchTerm);
 
     const searchQuery = urlParams.toString();
-    console.log(searchQuery);
 
     navigate(`/search?${searchQuery}`);
   };
@@ -72,7 +73,7 @@ const Header = () => {
         </Link>
         {/* search input */}
         <form
-          onSubmit={ onSubmit}
+          onSubmit={onSubmit}
           className="relative max-sm:max-w-[150px] flex items-center justify-center "
         >
           <Input
@@ -87,12 +88,44 @@ const Header = () => {
           </span>
         </form>
       </div>
-      {/* search icon mobile view
-      <Button className="p-3 lg:hidden" variant="outline">
-        <Search className=" dark:text-white" />{" "}
-      </Button> */}
+
       {/* dark mode icon and Sign in button */}
-      <div className="flex gap-4 md:order-2">
+      <div className="flex gap-4 ">
+        {/* navigation menu desktop */}
+        <NavigationMenu className="hidden md:inline">
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <Link to="/">
+                <Button
+                  className={cn({ underline: path === "/" })}
+                  variant="link"
+                >
+                  Home
+                </Button>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/about">
+                <Button
+                  className={cn({ underline: path === "/about" })}
+                  variant="link"
+                >
+                  About
+                </Button>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/projects">
+                <Button
+                  className={cn({ underline: path === "/projects" })}
+                  variant="link"
+                >
+                  Blogs
+                </Button>
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
         <Button
           onClick={() => dispatch(toggleTheme())}
           className="p-0"
@@ -172,41 +205,6 @@ const Header = () => {
           </DropdownMenu>
         </div>
       </div>
-      {/* navigation menu desktop */}
-      <NavigationMenu className="hidden md:inline">
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <Link to="/">
-              <Button
-                className={cn({ underline: path === "/" })}
-                variant="link"
-              >
-                Home
-              </Button>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link to="/about">
-              <Button
-                className={cn({ underline: path === "/about" })}
-                variant="link"
-              >
-                About
-              </Button>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link to="/projects">
-              <Button
-                className={cn({ underline: path === "/projects" })}
-                variant="link"
-              >
-                Blogs
-              </Button>
-            </Link>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
     </nav>
   );
 };

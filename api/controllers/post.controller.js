@@ -77,6 +77,31 @@ export const getAllPosts = async (req, res, next) => {
         next(error)
     }
 }
+//get all categories 
+
+export const getAllCategories = async (req, res, next) => {
+    try {
+        const uniqueCategories = await Post.aggregate([
+            {
+                $group: {
+                    _id: "$category"
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    category: "$_id"
+                }
+            }
+        ]);
+        res.json(uniqueCategories).status(200)
+        console.log(uniqueCategories);
+
+
+    } catch (error) {
+        next(error)
+    }
+}
 
 // delete post 
 

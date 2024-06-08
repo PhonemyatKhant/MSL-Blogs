@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
+import PostCard from "@/components/PostCard";
 
 const SearchPage = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,9 @@ const SearchPage = () => {
     sortByASC: true,
     category: "",
   });
+  const [uniqueCategories, setUniqueCategories] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  console.log(uniqueCategories);
   //   console.log(formData);
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,13 +41,32 @@ const SearchPage = () => {
 
         const res = await fetch(`/api/post/all-posts?${urlString}`);
         const data = await res.json();
-        console.log(data);
+
+        if (res.ok) {
+          setFilteredPosts(data.posts);
+        }
       } catch (error) {
         console.log(error);
       }
     };
     fetchPosts();
   }, [location.search]);
+
+  useEffect(() => {
+    const getUniqueCategories = async () => {
+      try {
+        const res = await fetch("/api/post/all-categories");
+        const data = await res.json();
+
+        if (res.ok) {
+          setUniqueCategories(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUniqueCategories();
+  }, []);
 
   const onSortByChange = (e) => {
     e.preventDefault();
@@ -54,6 +77,18 @@ const SearchPage = () => {
     // });
 
     urlParams.set("sortDirection", !formData.sortByASC ? "asc" : "desc");
+    console.log(urlParams);
+    const searchQuery = urlParams.toString();
+
+    navigate(`/search?${searchQuery}`);
+  };
+  const onCategoryChange = (value) => {
+    const urlParams = new URLSearchParams(location.search);
+    // setFormData((pre) => {
+    //   return { ...pre, category: value};
+    // });
+
+    urlParams.set("category", value);
     console.log(urlParams);
     const searchQuery = urlParams.toString();
 
@@ -73,15 +108,16 @@ const SearchPage = () => {
 
   return (
     <div className=" min-h-screen">
+      {/* top bar  */}
       <div className=" mx-auto max-w-fit mt-8">
         {/* top */}
 
         {/* top  */}
         {/* search input */}
-        <div className=" flex items-center gap-2 ">
+        <div className=" flex items-center justify-between gap-2 ">
           {/* input form  */}
-          <form onSubmit={onSubmit}>
-            <div className="relative max-sm:max-w-[150px] flex items-center justify-center ">
+          <form className=" flex-1" onSubmit={onSubmit}>
+            <div className="relative max-sm:max-w-[150px] flex  items-center justify-center ">
               <Input
                 onChange={(e) =>
                   setFormData({
@@ -110,8 +146,8 @@ const SearchPage = () => {
               className="rounded-2xl flex items-center justify-center gap-2"
             >
               {" "}
-              Latest
-              <SortAsc />
+              Oldest
+              <SortDesc />
             </Button>
           ) : (
             <Button
@@ -121,34 +157,45 @@ const SearchPage = () => {
               size="sm"
               className="rounded-2xl flex items-center justify-center gap-2"
             >
-              Oldest
-              <SortDesc />
+              Newest
+              <SortAsc />
             </Button>
           )}
         </div>
         {/* bottom */}
-        <div className=" mt-4">
+        <div className="  mt-4">
           <ToggleGroup
+            className=" flex flex-wrap max-w-screen-md"
             value={formData.category}
-            onValueChange={(value) =>
-              setFormData((prevValue) => {
-                return { ...prevValue, category: value };
-              })
-            }
+            // onValueChange={(value) =>
+            //   setFormData((prevValue) => {
+            //     return { ...prevValue, category: value };
+            //   })
+            // }
+            onValueChange={(value) => onCategoryChange(value)}
             size="sm"
             type="single"
           >
-            <ToggleGroupItem value="bold" aria-label="Toggle bold">
-              <h1>Speaking</h1>
-            </ToggleGroupItem>
-            <ToggleGroupItem value="italic" aria-label="Toggle italic">
-              <h1>Speaking</h1>
-            </ToggleGroupItem>
-            <ToggleGroupItem value="underline" aria-label="Toggle underline">
-              <h1>Speaking</h1>
-            </ToggleGroupItem>
+            {uniqueCategories.length !== 0 &&
+              uniqueCategories.map((x) => (
+                <ToggleGroupItem
+                  className=" rounded-3xl"
+                  value={x.category}
+                  aria-label={x.category}
+                >
+                  <h1>{x.category} </h1>
+                </ToggleGroupItem>
+              ))}
           </ToggleGroup>
         </div>
+      </div>
+
+      {/* posts grid layout  */}
+      <div className="my-10 items-center grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ">
+        {filteredPosts.length !== 0 &&
+          filteredPosts.map((filteredPost, index) => (
+            <PostCard key={index} post={filteredPost} />
+          ))}
       </div>
     </div>
   );
