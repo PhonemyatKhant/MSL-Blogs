@@ -14,6 +14,9 @@ export default defineConfig({
     }
   },
   plugins: [react()],
+  build: {
+    outDir: 'dist', // Output directory for Vite build
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
