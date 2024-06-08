@@ -7,10 +7,12 @@ import React, { useEffect, useState } from "react";
 
 import { useLocation } from "react-router-dom";
 import DashboardHome from "@/components/DashboardHome";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const location = useLocation();
   const [tab, setTab] = useState("");
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     // has searchParams variables
@@ -23,9 +25,11 @@ const Dashboard = () => {
   return (
     <div className=" min-h-screen">
       {/* sidebar  */}
-      <div>
-        <DashboardSidebar />
-      </div>
+      {currentUser.isAdmin && (
+        <div>
+          <DashboardSidebar />
+        </div>
+      )}
       {/* right display  */}
 
       {/* dashboard  */}

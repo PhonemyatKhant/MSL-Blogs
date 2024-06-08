@@ -27,28 +27,26 @@ const Footer = () => {
         <Link to="/about">
           <h1 className="underline">About</h1>{" "}
         </Link>
-        <Link to="/payment-methods">
-          <h1 className="underline">blogs</h1>{" "}
+        <Link to="/search">
+          <h1 className="underline">Blogs</h1>{" "}
         </Link>
-        <Link to="/contact-us">
-          <h1 className="underline">Contact Us</h1>{" "}
-        </Link>
+        <h1>phonemyatkhant45@gmail.com</h1>
       </div>
       <div>
-        <h1 className="text-lg">Follow Us</h1>
+        <h1 className="text-lg">Follow Me</h1>
         <div className="my-5 gap-3 flex justify-between items-center max-w-[100px]">
-          <Link to="">
+          <Link to="https://github.com/PhonemyatKhant">
             <Facebook />
           </Link>
-          <Link to="">
+          <Link to="https://github.com/PhonemyatKhant">
             {" "}
             <Linkedin />
           </Link>
-          <Link to="">
+          <Link to="https://github.com/PhonemyatKhant">
             {" "}
             <Github />
           </Link>
-          <Link to="">
+          <Link to="https://github.com/PhonemyatKhant">
             {" "}
             <Instagram />
           </Link>

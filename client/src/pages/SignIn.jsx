@@ -70,17 +70,17 @@ const SignIn = () => {
        gap-9"
       >
         {/* left  */}
-        <div className="dark:text-white flex-1 space-y-6">
-          <h1 className=" max-md:text-8xl text-9xl font-semibold ">
-            MSL
-            <br /> BLOGS
+        <div className="dark:text-white my-3 space-y-6 w-full max-w-screen-sm flex-1">
+          <h1 className="text-primary text-9xl font-semibold max-md:text-6xl max-lg:text-7xl">
+            msl.
+            <br />
+            <span className=" underline ">blogs</span>
           </h1>
-          <p>
+          <p className="text-lg max-md:text-base">
             "Welcome to MSL, a Blog Website Dedicated to Sharing Knowledge and
-            Insights about Spanish Learners in Myanmar. Connect with a Community
-            of Enthusiastic Learners, Access Comprehensive Lessons, and Discover
-            Rich Resources Tailored to Your Learning Journey."
+            Insights about Spanish Learners in Myanmar."
           </p>
+          {/* <Button className="max-w-[100px]">Explore</Button> */}
         </div>
         {/* right  */}
         <div className="flex-1">

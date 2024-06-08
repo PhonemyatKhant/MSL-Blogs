@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 const AdCard = ({ adImage }) => {
   return (
@@ -20,7 +21,9 @@ const AdCard = ({ adImage }) => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button> CLICK ME </Button>
+            <Link to="https://github.com/PhonemyatKhant">
+              <Button> CLICK ME </Button>
+            </Link>
           </CardContent>
         </div>
         <CardContent className=" max-w-screem-md w-full pt-6 flex-1">

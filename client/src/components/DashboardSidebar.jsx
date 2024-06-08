@@ -47,36 +47,19 @@ const DashboardSidebar = () => {
     { id: 2, name: "posts", label: "Posts", icon: <Library /> },
     { id: 3, name: "users", label: "Users", icon: <Users /> },
     { id: 4, name: "comments", label: "Comments", icon: <MessageSquareMore /> },
-    { id: 5, name: "sign-out", label: "Sign Out", icon: <LogOut /> },
+    // { id: 5, name: "sign-out", label: "Sign Out", icon: <LogOut /> },
   ];
 
-  //sign out function
-  const signOutHandler = async () => {
-    try {
-      const res = await fetch("/api/auth/sign-out", {
-        method: "POST",
-      });
-      const data = await res.json();
-      if (res.ok) {
-        dispatch(signOutSuccess());
-      } else {
-        console.log(data.message);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
   return (
     <div className="my-4  ">
       <Sheet key={"left"}>
-        <SheetTrigger className=" text-lg flex items-center gap-2 text-muted-foreground font-semibold">
-          {" "}
+        <SheetTrigger className=" text-lg flex items-center gap-2 text-primary font-semibold">
           <PanelRightClose />
           <span>Tabs</span>
         </SheetTrigger>
-        <SheetContent side="left">
+        <SheetContent className=" bg-primary/50 text-white   border-0 " side="left">
           <SheetHeader className="mt-5">
-            <SheetTitle className="flex items-center justify-between ">
+            <SheetTitle className=" text-white flex items-center justify-between ">
               MSL BLOGS<Badge>{currentUser.isAdmin ? "ADMIN" : "USER"}</Badge>
             </SheetTitle>
             <ul className="w-full flex flex-col">

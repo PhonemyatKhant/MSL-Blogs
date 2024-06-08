@@ -32,6 +32,7 @@ import {
 import { Frown, Loader2, PartyPopper, Smile } from "lucide-react";
 import PopUpDialog from "./PopUpDialog";
 import { Link } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const formSchema = z.object({
   image: z.any(),
@@ -69,7 +70,7 @@ const DashboardProfile = () => {
       email: currentUser.email,
     },
   });
-  const { register, handleSubmit, setValue, formState } = form;
+  const { register} = form;
 
   //on submit on update
   async function onSubmit(values) {
@@ -200,168 +201,176 @@ const DashboardProfile = () => {
     }
   };
   return (
-    <div >
-      <h1 className=" text-primary text-5xl font-semibold">My Profile</h1>
+    <Card className='mt-10'>
+      <CardHeader>
+        <CardTitle className=" text-primary text-5xl font-semibold">
+          My Profile
+        </CardTitle>
+      </CardHeader>
 
-      {/* alert dialogs  */}
-      <div className=" mt-6 space-y-3">
-        {/* image input alert  */}
-        {imageFileUploadError && (
-          <Alert variant="destructive">
-            <Frown />
-            <AlertTitle>Error !</AlertTitle>
-            <AlertDescription>{imageFileUploadError}</AlertDescription>
-          </Alert>
-        )}
-        {/* error alert  */}
-        {error && (
-          <Alert variant="destructive">
-            <Frown />
-            <AlertTitle>Error !</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+      <CardContent>
+        {/* alert dialogs  */}
+        <div className=" mt-6 space-y-3">
+          {/* image input alert  */}
+          {imageFileUploadError && (
+            <Alert variant="destructive">
+              <Frown />
+              <AlertTitle>Error !</AlertTitle>
+              <AlertDescription>{imageFileUploadError}</AlertDescription>
+            </Alert>
+          )}
+          {/* error alert  */}
+          {error && (
+            <Alert variant="destructive">
+              <Frown />
+              <AlertTitle>Error !</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-        {/* successful update alert  */}
-        {isUpdateSuccessful !== null && (
-          <Alert variant={!isUpdateSuccessful && "destructive"}>
-            {isUpdateSuccessful ? <Smile /> : <Frown />}
-            <AlertTitle>{isUpdateSuccessful ? "Success!" : "Oops!"}</AlertTitle>
-            <AlertDescription>
-              {isUpdateSuccessful ? "Update Successful!" : "Update Failed!"}
-            </AlertDescription>
-          </Alert>
-        )}
-      </div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className=" flex justify-center gap-7  p-4 pt-10 max-md:flex-col md:items-end">
-            {/* left */}
-            <div className=" flex-1 space-y-4">
-              {/* rounded image container  */}
-              <div
-                onClick={() => filePickerRef.current.click()}
-                className="mb-4 mx-auto relative cursor-pointer  w-48  h-48 overflow-hidden rounded-full"
-              >
-                {imageFileUploadProgress && (
-                  <CircularProgressbar
-                    value={imageFileUploadProgress}
-                    text={`${imageFileUploadProgress}%`}
-                    strokeWidth={3}
-                    styles={{
-                      root: {
-                        width: "100%",
-                        height: "100%",
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                      },
-                      path: {
-                        stroke: `rgba(00,00,00, ${
-                          imageFileUploadProgress / 100
-                        })`,
-                      },
-                      text: {
-                        fill: "rgba(255, 255, 255, 1)",
-                      },
-                    }}
+          {/* successful update alert  */}
+          {isUpdateSuccessful !== null && (
+            <Alert variant={!isUpdateSuccessful && "destructive"}>
+              {isUpdateSuccessful ? <Smile /> : <Frown />}
+              <AlertTitle>
+                {isUpdateSuccessful ? "Success!" : "Oops!"}
+              </AlertTitle>
+              <AlertDescription>
+                {isUpdateSuccessful ? "Update Successful!" : "Update Failed!"}
+              </AlertDescription>
+            </Alert>
+          )}
+        </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className=" flex justify-center gap-7  p-4 pt-10 max-md:flex-col md:items-end">
+              {/* left */}
+              <div className=" flex-1 space-y-4">
+                {/* rounded image container  */}
+                <div
+                  onClick={() => filePickerRef.current.click()}
+                  className="mb-4 mx-auto relative cursor-pointer  w-48  h-48 overflow-hidden rounded-full"
+                >
+                  {imageFileUploadProgress && (
+                    <CircularProgressbar
+                      value={imageFileUploadProgress}
+                      text={`${imageFileUploadProgress}%`}
+                      strokeWidth={3}
+                      styles={{
+                        root: {
+                          width: "100%",
+                          height: "100%",
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                        },
+                        path: {
+                          stroke: `rgba(00,00,00, ${
+                            imageFileUploadProgress / 100
+                          })`,
+                        },
+                        text: {
+                          fill: "rgba(255, 255, 255, 1)",
+                        },
+                      }}
+                    />
+                  )}
+                  <img
+                    className={`object-cover w-full h-full rounded-full border p-1 ${
+                      imageFileUploadProgress &&
+                      imageFileUploadProgress < 50 &&
+                      "opacity-40"
+                    }`}
+                    src={imageURL || currentUser.profilePicture}
+                    alt={currentUser.username}
                   />
+                </div>
+                {/* create post button  */}
+
+                {currentUser.isAdmin && (
+                  <Link to="/create-post">
+                    <Button className="w-full" variant="outline" type="button">
+                      Create Post
+                    </Button>
+                  </Link>
                 )}
-                <img
-                  className={`object-cover w-full h-full rounded-full border p-1 ${
-                    imageFileUploadProgress &&
-                    imageFileUploadProgress < 50 &&
-                    "opacity-40"
-                  }`}
-                  src={imageURL || currentUser.profilePicture}
-                  alt={currentUser.username}
+
+                {/* delete account sign out button  */}
+
+                <div className=" flex justify-between items-center">
+                  <PopUpDialog
+                    trigger={
+                      <h1 className=" text-red-400 text-sm font-medium hover:underline">
+                        Delete Account
+                      </h1>
+                    }
+                    handlerFunction={deleteUserHandler}
+                  />
+                  <Button
+                    type="button"
+                    variant="link"
+                    className=" text-red-400 p-1"
+                    onClick={() => signOutHandler()}
+                  >
+                    Sign Out
+                  </Button>
+                </div>
+                {/* file input hidden  */}
+                <ImageFormInput
+                  className="hidden"
+                  type="file"
+                  form={form}
+                  name="image"
+                  label="Profile Image"
+                  register={register}
+                  reference={filePickerRef}
+                  imageInputHandler={imageInputHandler}
                 />
               </div>
-              {/* create post button  */}
-
-              {currentUser.isAdmin && (
-                <Link to="/create-post">
-                  <Button className="w-full" variant="outline" type="button">
-                    Create Post
-                  </Button>
-                </Link>
-              )}
-
-              {/* delete account sign out button  */}
-
-              <div className=" flex justify-between items-center">
-                <PopUpDialog
-                  trigger={
-                    <h1 className=" text-red-400 text-sm font-medium hover:underline">
-                      Delete Account
-                    </h1>
-                  }
-                  handlerFunction={deleteUserHandler}
+              {/* right  */}
+              <div className=" flex-1 space-y-4">
+                <FormInput
+                  type="text"
+                  form={form}
+                  placeholder="username"
+                  name="username"
+                  label="Username"
                 />
+                <FormInput
+                  form={form}
+                  placeholder="user@gmail.com"
+                  name="email"
+                  label="Email Address"
+                  type="email"
+                />
+                <FormInput
+                  form={form}
+                  placeholder="password"
+                  name="password"
+                  label="Password"
+                  type="password"
+                />
+                {/* submit btn  */}
                 <Button
-                  type="button"
-                  variant="link"
-                  className=" text-red-400 p-1"
-                  onClick={() => signOutHandler()}
+                  className="w-full"
+                  type="submit"
+                  disabled={imageUploadComplete === false || loading}
                 >
-                  Sign Out
+                  {imageUploadComplete && !loading ? (
+                    "UPDATE"
+                  ) : (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Please wait
+                    </>
+                  )}
                 </Button>
               </div>
-              {/* file input hidden  */}
-              <ImageFormInput
-                className="hidden"
-                type="file"
-                form={form}
-                name="image"
-                label="Profile Image"
-                register={register}
-                reference={filePickerRef}
-                imageInputHandler={imageInputHandler}
-              />
             </div>
-            {/* right  */}
-            <div className=" flex-1 space-y-4">
-              <FormInput
-                type="text"
-                form={form}
-                placeholder="username"
-                name="username"
-                label="Username"
-              />
-              <FormInput
-                form={form}
-                placeholder="user@gmail.com"
-                name="email"
-                label="Email Address"
-                type="email"
-              />
-              <FormInput
-                form={form}
-                placeholder="password"
-                name="password"
-                label="Password"
-                type="password"
-              />
-              {/* submit btn  */}
-              <Button
-                className="w-full"
-                type="submit"
-                disabled={imageUploadComplete === false || loading}
-              >
-                {imageUploadComplete && !loading ? (
-                  "UPDATE"
-                ) : (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Please wait
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-        </form>
-      </Form>
-    </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 

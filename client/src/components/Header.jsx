@@ -28,6 +28,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "@/redux/theme/themeSlice";
+import { signOutSuccess } from "@/redux/user/userSlice";
 
 const Header = () => {
   const path = useLocation().pathname;
@@ -59,8 +60,25 @@ const Header = () => {
 
     navigate(`/search?${searchQuery}`);
   };
+
+  //sign out function
+  const signOutHandler = async () => {
+    try {
+      const res = await fetch("/api/auth/sign-out", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        dispatch(signOutSuccess());
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
-    <nav className="dark:text-white bg-transparent border-b-2 p-2 flex justify-between items-center">
+    <nav className="dark:text-white bg-transparent border-b-2 p-3 px-5 flex justify-between items-center">
       <div className=" flex items-center justify-between gap-3">
         <Link
           to="/"
@@ -115,7 +133,7 @@ const Header = () => {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link to="/projects">
+              <Link to="/search">
                 <Button
                   className={cn({ underline: path === "/projects" })}
                   variant="link"
@@ -159,7 +177,9 @@ const Header = () => {
                   {" "}
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem>Sign Out</DropdownMenuItem>
+                <DropdownMenuItem onClick={signOutHandler}>
+                  Sign Out
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -172,7 +192,7 @@ const Header = () => {
         <div className="flex md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Menu />{" "}
+              <Menu className=" text-primary" />{" "}
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>Menu</DropdownMenuLabel>
@@ -193,10 +213,10 @@ const Header = () => {
                   About
                 </DropdownMenuItem>
               </Link>
-              <Link to="/projects">
+              <Link to="/search">
                 {" "}
                 <DropdownMenuItem
-                  className={cn({ "font-semibold": path === "/projects" })}
+                  className={cn({ "font-semibold": path === "/search" })}
                 >
                   Blogs
                 </DropdownMenuItem>
