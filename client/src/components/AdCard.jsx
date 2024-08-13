@@ -9,19 +9,19 @@ import {
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 
-const AdCard = ({ adImage }) => {
+const AdCard = ({ adImage, category }) => {
   return (
     <Card className=" max-w-screen-lg mx-auto mt-24 overflow-hidden">
       <div className=" flex items-center w-full  justify-evenly px-10   flex-col sm:flex-row">
         <div className=" w-full flex-1">
           <CardHeader>
-            <CardTitle>Want to see more of my recent projects?</CardTitle>
+            <CardTitle>Want to see more like this?</CardTitle>
             <CardDescription>
-              Checkout my github profile with different javascipt projects!
+              Checkout all the different posts related to this category!
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Link to="https://github.com/PhonemyatKhant">
+            <Link to={`/search?startIndex=0&category=${category}`}>
               <Button> CLICK ME </Button>
             </Link>
           </CardContent>

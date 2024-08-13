@@ -45,7 +45,10 @@ const PostPage = () => {
           {/*  title category */}
           <div className=" space-y-6 text-center mt-9">
             <h1 className=" text-4xl sm:text-6xl ">{post.title} </h1>
-            <Link to={"/"} className={badgeVariants({ variant: "default" })}>
+            <Link
+              to={`/search?startIndex=0&category=${post.category}`}
+              className={badgeVariants({ variant: "default" })}
+            >
               {post.category}{" "}
             </Link>
           </div>
@@ -71,7 +74,7 @@ const PostPage = () => {
 
             {/* <Separator /> */}
 
-            <AdCard adImage={post.image} />
+            <AdCard category={post.category} adImage={post.image} />
 
             {/* comment section of the post  */}
 

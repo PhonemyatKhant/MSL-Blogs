@@ -21,8 +21,10 @@ const Footer = () => {
       </div>
       <div>
         <h1 className="mb-2 text-xl">
-          Sign-up now to join <br />a community of <br />
-          myanmar spanish learners.
+          Sign up now to join
+          <br /> my personal blog community
+          <br /> and stay updated on my
+          <br /> latest adventures and insights.
         </h1>
         <Link to="/about">
           <h1 className="underline">About</h1>{" "}

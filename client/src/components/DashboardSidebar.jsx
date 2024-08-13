@@ -57,7 +57,7 @@ const DashboardSidebar = () => {
           <PanelRightClose />
           <span>Tabs</span>
         </SheetTrigger>
-        <SheetContent className=" bg-primary/50 text-white   border-0 " side="left">
+        <SheetContent className=" bg-primary text-white   border-0 " side="left">
           <SheetHeader className="mt-5">
             <SheetTitle className=" text-white flex items-center justify-between ">
               MSL BLOGS<Badge>{currentUser.isAdmin ? "ADMIN" : "USER"}</Badge>

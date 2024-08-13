@@ -10,46 +10,37 @@ import Dog from "@/assets/Dog.svg";
 
 const About = () => {
   return (
-    <div className=" min-h-screen">
-      <Card className="mt-10 ">
+    <div className="min-h-screen">
+      <Card className="mt-10">
         <CardHeader>
-          <CardTitle className=" text-3xl text-primary">About</CardTitle>
+          <CardTitle className="text-3xl text-primary">About</CardTitle>
         </CardHeader>
-        <CardContent className='flex justify-evenly max-md:flex-col items-center'>
+        <CardContent className="flex justify-evenly max-md:flex-col items-center">
           {/* left  */}
           <div className="flex-1 space-y-5">
-            <h1 className=" font-semibold text-primary text-lg">
-              Why This Blog Website?
+            <h1 className="font-semibold text-primary text-lg">
+              Why This Blog?
             </h1>
             <li>
-              This blog is my platform to share insights, tutorials, and
-              personal experiences from my journey as a spanish learner. Whether
-              you are a beginner looking to learn the basics or an experienced
-              learner seeking advanced tips, I aim to provide valuable content
-              that caters to all levels.
+              Welcome to my corner of the internet! This blog is where I share my thoughts, experiences, and insights on various topics I'm passionate about. Whether you're here to learn something new or just curious, I hope you find something that sparks your interest.
             </li>
-            <h1 className=" font-semibold text-primary text-lg">My Mission</h1>
+            <h1 className="font-semibold text-primary text-lg">My Mission</h1>
             <li>
-              My mission is to inspire and empower others to pursue their
-              passion for learning spanish. Through this blog, I hope to build a
-              community where we can all learn, grow, and support each other.
+              My mission is to inspire and empower others to explore new ideas and perspectives. Through this blog, I hope to build a community where we can learn, grow, and support each other on our journeys.
             </li>
-            <h1 className=" font-semibold text-primary text-lg">
+            <h1 className="font-semibold text-primary text-lg">
               Connect With Me
             </h1>
             <li>
-              I'm always excited to connect with fellow developers, enthusiasts,
-              and anyone interested in web development. Feel free to email me
-              and follow me on github.
+              I love connecting with fellow enthusiasts and anyone curious about life's endless possibilities. Feel free to email me or follow my adventures on GitHub!
             </li>
           </div>
-          <div className=" w-full flex-1">
-            <img className=" w-full" src={Dog} alt="dogsvg" />
+          <div className="w-full flex-1">
+            <img className="w-full" src={Dog} alt="A cute dog" />
           </div>
         </CardContent>
         <CardFooter>
-          Thank you for visiting my blog website. Let's embark on this learning
-          journey together!
+          Thank you for visiting my blog! I'm excited to embark on this journey together. Let's explore and learn side by side!
         </CardFooter>
       </Card>
     </div>
